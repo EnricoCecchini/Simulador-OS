@@ -15,6 +15,33 @@ class Proceso:
         print("Tiempo Total:", self.tEjec)
         print("Estado:", self.estado)
 
+def lecturaArchivo():
+    global listaProcesos
+    global listaNombres
+    global listaReady
+
+    numProcesos = int(input())                          # Numero de procesos
+
+    # Ciclo para crear los procesos leidos del archivo
+    for i in range(numProcesos):
+
+        # llegada, tiempo total estimado y estado (1-running, 2-blocked, 3-ready)
+        datosProceso = input().replace(' ','').split(',')   
+
+        llegada = int(datosProceso[0])
+        tiempoTotal = int(datosProceso[1])
+        estado = int(datosProceso[2])
+
+
+        numPags = int(input())
+
+        procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado)
+
+        listaProcesos.append(procesoNuevo) 
+        listaReady.append(procesoNuevo)
+        listaNombres.append(i+1)
+
+
 def crearProceso(listaReady, tiempoActual):
     global listaProcesos
     global listaNombres
@@ -46,28 +73,9 @@ listaRunning = []
 listaBlocked = []
 listaNombres = []
 
-numProcesos = int(input())                          # Numero de procesos
+lecturaArchivo()
 
-# Ciclo para crear los procesos leidos del archivo
-for i in range(numProcesos):
-
-    # llegada, tiempo total estimado y estado (1-running, 2-blocked, 3-ready)
-    datosProceso = input().replace(' ','').split(',')   
-
-    llegada = int(datosProceso[0])
-    tiempoTotal = int(datosProceso[1])
-    estado = int(datosProceso[2])
-
-
-    numPags = int(input())
-
-    procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado)
-
-    listaProcesos.append(procesoNuevo) 
-    listaReady.append(procesoNuevo)
-    listaNombres.append(i+1)
-
-listaReady = crearProceso(listaReady, tiempoActual)
+crearProceso(listaReady, tiempoActual)
 for i, proceso in enumerate(listaProcesos):
     print(f'\n********* Proceso {i+1} **********')
     proceso.printProceso()
