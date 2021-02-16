@@ -15,14 +15,60 @@ class Proceso:
         print("Tiempo Total:", self.tEjec)
         print("Estado:", self.estado)
 
-def crearProceso(listaReady, tiempoActual):
+
+# Metodo para leer datos de archivo
+def lecturaArchivo():
     global listaProcesos
     global listaNombres
+    global listaReady
+
+    # Abre archivo para capturar datos
+    while True:
+        try:
+            nombreArchivo = input('Nombre de Archivo a leer: ')
+            f = open(nombreArchivo, 'r')
+            break
+        except FileNotFoundError:
+            print('Ingrese el nombre completo del archivo')
+
+    data = f.readline().replace(' ','').split(',')
+    pags = int(data[0])                                      # Cantidad maxima de paginas
+    tiempoActual = int(data[1])                              # Tiempo actual
+
+    numProcesos = int(f.readline())                          # Numero de procesos
+
+    # Ciclo para crear los procesos leidos del archivo
+    for i in range(numProcesos):
+
+        # llegada, tiempo total estimado y estado (1-running, 2-blocked, 3-ready)
+        datosProceso = f.readline().replace(' ','').split(',')   
+
+        llegada = int(datosProceso[0])
+        tiempoTotal = int(datosProceso[1])
+        estado = int(datosProceso[2])
+
+        numPags = int(f.readline())
+
+        procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado)
+
+        listaProcesos.append(procesoNuevo) 
+        listaReady.append(procesoNuevo)
+        listaNombres.append(i+1)
+
+    return pags, tiempoActual
+
+def crearProceso(tiempoActual):
+    global listaProcesos
+    global listaNombres
+    global listaReady
 
     # Checa que el nombre del proceso no exista ya
-    nombre = -1
-    while nombre == -1 or nombre in listaNombres:
+    while True:
         nombre = int(input("Nombre: "))
+        if nombre not in listaNombres:
+            break
+        else:
+            print('El proceso ya existe')
 
     paginas = int(input('Paginas: '))
     tiempoTotal = int(input('Tiempo de Ejecucion: '))
@@ -33,41 +79,21 @@ def crearProceso(listaReady, tiempoActual):
     listaProcesos.append(procesoNuevo)
     listaReady.append(procesoNuevo)
 
-    return listaReady
+    #return listaReady
         
-
-l = input().replace(' ','').split(',')
-pags = int(l[0])                                    # Cantidad maxima de paginas
-tiempoActual = int(l[1])                                  # Tiempo actual
-
+# Listas vacias para almacenar Procesos
 listaProcesos = []
 listaReady = []
 listaRunning = []
 listaBlocked = []
 listaNombres = []
 
-numProcesos = int(input())                          # Numero de procesos
+pags, tiempoActual = lecturaArchivo()
 
-# Ciclo para crear los procesos leidos del archivo
-for i in range(numProcesos):
+crearProceso(tiempoActual)
 
-    # llegada, tiempo total estimado y estado (1-running, 2-blocked, 3-ready)
-    datosProceso = input().replace(' ','').split(',')   
+#print(listaProcesos[0].printProceso())
 
-    llegada = int(datosProceso[0])
-    tiempoTotal = int(datosProceso[1])
-    estado = int(datosProceso[2])
-
-
-    numPags = int(input())
-
-    procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado)
-
-    listaProcesos.append(procesoNuevo) 
-    listaReady.append(procesoNuevo)
-    listaNombres.append(i+1)
-
-listaReady = crearProceso(listaReady, tiempoActual)
 for i, proceso in enumerate(listaProcesos):
     print(f'\n********* Proceso {i+1} **********')
     proceso.printProceso()
