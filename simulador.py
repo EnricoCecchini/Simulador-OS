@@ -15,34 +15,40 @@ class Proceso:
         print("Tiempo Total:", self.tEjec)
         print("Estado:", self.estado)
 
-def checarFin():
+def agregarFinished():                                # Metodo para checar si ya termino un proceso
     global listaRunning
     global listaProcesos
     global listaFinished
 
-    if listaRunning[0].tEjec < 1:
+    if listaRunning[0].tEjec < 1:               
         procesoAct.estado = 4
         listaFinished.append(listaRunning[0])
         listaRunning.pop()
         algoritmoFIFO()
 
+def cehcarFinProceso():
+    global listaRunning
+
+    if listaRunning[0].tEjec < 1:
+        return True
 
 def algoritmoFIFO():
     global listaReady
     global listaRunning
     global listaFinished
 
-    if not listaRunning:
-        listaRunning.append(listaReady[0])
-        listaReady.pop(0)
+    if not listaRunning:                        # Si la lista de Running esta vacia, agrega primer
+        listaRunning.append(listaReady[0])      # proceso de Ready y lo quita de la lista y vuelve
+        listaReady.pop(0)                       #  a correr el metodo
         algoritmoFIFO()
 
-    elif listaRunning[0].tEjec < 1:
-        listaRunning[0].estado = 4
+    elif cehcarFinProceso():                    # Si se termino el proceso, se cambia el estado, se agrega
+        listaRunning[0].estado = 4              # a finished, y se carga el siguiente proceso
         listaFinished.append(listaRunning[0])
         listaRunning[0] = listaReady[0]
         listaReady.pop(0)
-    else:
+
+    else:                                       # Se regresa el proceso a ready y se carga el siguiente
         listaRunning[0].estado = 3
         listaReady.append(listaRunning[0])
         listaRunning[0] = listaReady[0]
