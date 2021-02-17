@@ -49,6 +49,9 @@ def lecturaArchivo():
 
         numPags = int(f.readline())
 
+        for pag in range(numPags):
+            d = f.readline()
+
         procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado)
 
         listaProcesos.append(procesoNuevo) 
