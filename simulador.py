@@ -1,5 +1,6 @@
 # Clase proceso para crear cada proceso nuevo introducido al sistema
 class Proceso:
+    global tiempoActual
 
     def __init__(self, nombre, llegada, paginas, tEjec, estado):
         self.nombre = nombre
@@ -10,6 +11,7 @@ class Proceso:
         self.quantum = 4
         self.cpuAsignado = 0
         self.cpuRestante = self.tEjec - self.cpuAsignado
+        self.envejecimiento = tiempoActual - self.llegada - self.cpuAsignado
     
     def printProceso(self):
         print("Nombre de Proceso:", self.nombre)
@@ -26,7 +28,6 @@ def agregarFinished():                                # Metodo para checar si ya
     listaRunning[0].estado = 4
     listaFinished.append(listaRunning[0])
     listaRunning.pop()
-    algoritmoFIFO()
 
 def agregarBlocked():
     global listaRunning
@@ -71,7 +72,7 @@ def cehcarFinProceso():
     global listaRunning
 
     if listaRunning[0].tEjec < 1:
-        return True
+        return True    
 
 def algoritmoFIFO():
     global listaReady
@@ -81,6 +82,7 @@ def algoritmoFIFO():
     if not listaRunning:                        # Si la lista de Running esta vacia, agrega primer
         listaRunning.append(listaReady[0])      # proceso de Ready y lo quita de la lista y vuelve
         listaReady.pop(0)                       #  a correr el metodo
+        # Agregar metodo para continuar hasta que termine
         algoritmoFIFO()
 
     elif cehcarFinProceso():                    # Si se termino el proceso, se cambia el estado, se agrega
@@ -101,7 +103,8 @@ def algoritmoRoundRobin():
     
     if listaRunning[0].quantum > 0 or not cehcarFinProceso(): # Si el quantum es mayor a 0 y el proceso no ha terminado 
         listaRunning[0].quantum -= 1                          # se le resta 1
-    
+        algoritmoRoundRobin()
+
     else:                                                     # Si se acaba el proceso se agreaga a Finished, si se acaba
         if cehcarFinProceso():                                # el quantum se agrega a Ready
             agregarFinished()
@@ -114,7 +117,9 @@ def algoritmoSRT():
     global listaRunning
     global listaReady
 
-    agregarRunningReady()                                   # Quita proceso que se esta ejecutando y lo agrega a Ready
+    if listaRunning():
+        agregarRunningReady()                                   # Quita proceso que se esta ejecutando y lo agrega a Ready
+    
     procesoTemp = listaReady[0]
 
     for proceso in listaReady:                              # Encuentra proceso que termina mas rapido                         
@@ -127,14 +132,34 @@ def algoritmoSRT():
     listaRunning.append(listaReady[0])                      # Agrega proceso a Running
     listaReady.remove[0]
 
+def algoritmoHRRN():
+    global listaRunning
+    global listaReady
 
-'''
-    else:                                       # Se regresa el proceso a ready y se carga el siguiente
-        listaRunning[0].estado = 3
-        listaReady.append(listaRunning[0])
-        listaRunning[0] = listaReady[0]
-        listaReady.pop(0)
-'''
+    if not listaRunning():
+        if cehcarFinProceso():
+            agregarFinished()
+            algoritmoHRRN()
+        else:
+            # Agregar metodo para siguiente vuelta hasta que el proceso actual termine
+            algoritmoHRRN()
+
+    else:
+        procesoTemp = listaReady[0]
+        prioridadTemp = (procesoTemp.Envejecimiento-procesoTemp.tEjec)/procesoTemp.tEjec
+
+        for proceso in listaReady:
+            prioridadProceso = (proceso.Envejecimiento-proceso.tEjec)/proceso.tEjec
+            
+            if prioridadProceso > prioridadTemp:
+                prioridadTemp = prioridadProceso
+                procesoTemp = proceso
+        
+        listaReady.remove(procesoTemp)                          # Pone el proceso con mas prioridad al inicio de Ready
+        listaReady.add(procesoTemp)
+
+        listaRunning.append(listaReady[0])                      # Agrega proceso a Running
+        listaReady.remove[0]
 
 # Metodo para leer datos de archivo
 def lecturaArchivo():
@@ -180,6 +205,7 @@ def lecturaArchivo():
 
     return pags, tiempoActual
 
+# Metodo para crear procesos
 def crearProceso(tiempoActual):
     #global listaProcesos
     global listaNombres
@@ -214,11 +240,11 @@ listaFinished = []
 
 pags, tiempoActual = lecturaArchivo()
 
+# TESTING
 crearProceso(tiempoActual)
 
 algoritmoFIFO()
 
-# TESTING
 print('\n******** READY ********')
 for i, proceso in enumerate(listaReady):
     print(f'\n********* Proceso {i+1} **********')
