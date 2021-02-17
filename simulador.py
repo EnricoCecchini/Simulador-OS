@@ -7,6 +7,8 @@ class Proceso:
         self.paginas = paginas
         self.tEjec = tEjec
         self.estado = estado
+        self.cpuAsignado = 0
+        self.cpuRestante = self.tEjec - self.cpuAsignado
     
     def printProceso(self):
         print("Nombre de Proceso:", self.nombre)
@@ -17,14 +19,52 @@ class Proceso:
 
 def agregarFinished():                                # Metodo para checar si ya termino un proceso
     global listaRunning
-    global listaProcesos
+    #global listaProcesos
     global listaFinished
+               
+    listaRunning[0].estado = 4
+    listaFinished.append(listaRunning[0])
+    listaRunning.pop()
+    algoritmoFIFO()
 
-    if listaRunning[0].tEjec < 1:               
-        procesoAct.estado = 4
-        listaFinished.append(listaRunning[0])
-        listaRunning.pop()
-        algoritmoFIFO()
+def agregarBlocked():
+    global listaRunning
+    #global listaProcesos
+    global listaBlocked
+
+    listaRunning[0].estado = 2
+    listaBlocked.append(listaRunning[0])
+    listaRunning.pop(0)
+
+def agrergarRunningReady():
+    global listaRunning
+    global listaReady
+
+    listaRunning.estado = 3
+    listaReady.append(listaRunning[0])
+    listaRunning.pop(0)
+
+def agregarBlockedReady():
+    global listaBlocked
+    global listaReady
+
+    listaBlocked[0].estado = 3
+    listaReady.append(listaBlocked[0])
+    listaBlocked.pop(0)
+
+def manejoInterrupt(interrupcion):
+    if interrupcion == 1:
+        agregarBlocked()
+    elif interrupcion == 2:
+        agregarFinished()
+    if interrupcion == 3:
+        agrergarRunningReady()
+    elif interrupcion == 4:
+        agregarFinished()
+    if interrupcion == 5:
+        agrergarRunningReady()
+    if interrupcion == 6:
+        agregarBlocked()
 
 def cehcarFinProceso():
     global listaRunning
@@ -58,7 +98,7 @@ def algoritmoFIFO():
 
 # Metodo para leer datos de archivo
 def lecturaArchivo():
-    global listaProcesos
+    #global listaProcesos
     global listaNombres
     global listaReady
 
@@ -90,18 +130,18 @@ def lecturaArchivo():
         numPags = int(f.readline())
 
         for pag in range(numPags):
-            d = f.readline()
+            f.readline()
 
         procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado)
 
-        listaProcesos.append(procesoNuevo) 
+        #listaProcesos.append(procesoNuevo) 
         listaReady.append(procesoNuevo)
         listaNombres.append(i+1)
 
     return pags, tiempoActual
 
 def crearProceso(tiempoActual):
-    global listaProcesos
+    #global listaProcesos
     global listaNombres
     global listaReady
 
@@ -119,13 +159,13 @@ def crearProceso(tiempoActual):
 
     procesoNuevo = Proceso(nombre, llegada, paginas, tiempoTotal, 3)
 
-    listaProcesos.append(procesoNuevo)
+    #listaProcesos.append(procesoNuevo)
     listaReady.append(procesoNuevo)
 
     #return listaReady
         
 # Listas vacias para almacenar Procesos
-listaProcesos = []
+#listaProcesos = []
 listaReady = []
 listaRunning = []
 listaBlocked = []
