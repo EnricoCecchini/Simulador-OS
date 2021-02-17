@@ -7,6 +7,7 @@ class Proceso:
         self.paginas = paginas
         self.tEjec = tEjec
         self.estado = estado
+        self.quantum = 4
         self.cpuAsignado = 0
         self.cpuRestante = self.tEjec - self.cpuAsignado
     
@@ -83,10 +84,31 @@ def algoritmoFIFO():
         algoritmoFIFO()
 
     elif cehcarFinProceso():                    # Si se termino el proceso, se cambia el estado, se agrega
-        listaRunning[0].estado = 4              # a finished, y se carga el siguiente proceso
-        listaFinished.append(listaRunning[0])
-        listaRunning[0] = listaReady[0]
-        listaReady.pop(0)
+        agregarFinished()
+
+# Metodo de Round Robin
+def algoritmoRoundRobin():
+    global listaReady
+    global listaRunning
+
+    if not listaRunning or listaRunning[0].quantum == 0:    # Si la lista de Running esta vacia, agrega primer
+        if listaRunning:                                    # proceso de Ready y lo quita de la lista, si no esta vacia
+            listaRunning[0].quantum = 4                     # y se acabo el quantum del proceso actual, se resetea a 4,
+            agrergarRunningReady()                          # se envia el proceso a Ready y se agrega el siguiente
+        listaRunning.append(listaReady[0])   
+        listaReady.pop(0)                      
+        algoritmoRoundRobin()
+    
+    if listaRunning[0].quantum > 0 or not cehcarFinProceso(): # Si el quantum es mayor a 0 y el proceso no ha terminado 
+        listaRunning[0].quantum -= 1                          # se le resta 1
+    
+    else:                                                     # Si se acaba el proceso se agreaga a Finished, si se acaba
+        if cehcarFinProceso():                                # el quantum se agrega a Ready
+            agregarFinished()
+        else:
+            listaRunning[0].quantum = 4
+            agrergarRunningReady()
+
 
 '''
     else:                                       # Se regresa el proceso a ready y se carga el siguiente
