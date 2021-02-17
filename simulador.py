@@ -19,6 +19,8 @@ class Proceso:
         print("Paginas:", self.paginas)
         print("Tiempo Total:", self.tEjec)
         print("Estado:", self.estado)
+        print('CPU Restante', self.cpuRestante)
+        print('Edad', self.envejecimiento)
 
 def agregarFinished():                                # Metodo para checar si ya termino un proceso
     global listaRunning
@@ -132,6 +134,7 @@ def algoritmoSRT():
     listaRunning.append(listaReady[0])                      # Agrega proceso a Running
     listaReady.remove[0]
 
+# Metodo de HRRN Apropiado
 def algoritmoHRRN():
     global listaRunning
     global listaReady
@@ -166,6 +169,8 @@ def lecturaArchivo():
     #global listaProcesos
     global listaNombres
     global listaReady
+    global tiempoActual
+    global limitePags
 
     # Abre archivo para capturar datos
     while True:
@@ -177,7 +182,7 @@ def lecturaArchivo():
             print('Ingrese el nombre completo del archivo')
 
     data = f.readline().replace(' ','').split(',')
-    pags = int(data[0])                                      # Cantidad maxima de paginas
+    limitePags = int(data[0])                                      # Cantidad maxima de paginas
     tiempoActual = int(data[1])                              # Tiempo actual
 
     numProcesos = int(f.readline())                          # Numero de procesos
@@ -203,13 +208,13 @@ def lecturaArchivo():
         listaReady.append(procesoNuevo)
         listaNombres.append(i+1)
 
-    return pags, tiempoActual
-
 # Metodo para crear procesos
-def crearProceso(tiempoActual):
+def crearProceso():
     #global listaProcesos
     global listaNombres
     global listaReady
+    global tiempoActual
+    global limitePags
 
     # Checa que el nombre del proceso no exista ya
     while True:
@@ -219,7 +224,13 @@ def crearProceso(tiempoActual):
         else:
             print('El proceso ya existe')
 
-    paginas = int(input('Paginas: '))
+    while True:
+        paginas = int(input('Paginas: '))
+        if paginas <= limitePags:
+            break
+        else:
+            print('Excediste limite de paginas')
+    
     tiempoTotal = int(input('Tiempo de Ejecucion: '))
     llegada = tiempoActual
 
@@ -238,11 +249,15 @@ listaBlocked = []
 listaNombres = []
 listaFinished = []
 
-pags, tiempoActual = lecturaArchivo()
+tiempoActual = 0
+limitePags = 0
+
+lecturaArchivo()
 
 # TESTING
-crearProceso(tiempoActual)
+crearProceso()
 
+algoritmoFIFO()
 algoritmoFIFO()
 
 print('\n******** READY ********')
@@ -251,7 +266,8 @@ for i, proceso in enumerate(listaReady):
     proceso.printProceso()
 
 print('\n******** RUNNING ********')
-print(listaRunning[0].printProceso())
+if listaRunning:
+    print(listaRunning[0].printProceso())
 
 print('\n******** Finished ********')
 print(listaFinished[0].printProceso())
