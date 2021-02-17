@@ -15,6 +15,38 @@ class Proceso:
         print("Tiempo Total:", self.tEjec)
         print("Estado:", self.estado)
 
+def checarFin():
+    global listaRunning
+    global listaProcesos
+    global listaFinished
+
+    if listaRunning[0].tEjec < 1:
+        procesoAct.estado = 4
+        listaFinished.append(listaRunning[0])
+        listaRunning.pop()
+        algoritmoFIFO()
+
+
+def algoritmoFIFO():
+    global listaReady
+    global listaRunning
+    global listaFinished
+
+    if not listaRunning:
+        listaRunning.append(listaReady[0])
+        listaReady.pop(0)
+        algoritmoFIFO()
+
+    elif listaRunning[0].tEjec < 1:
+        listaRunning[0].estado = 4
+        listaFinished.append(listaRunning[0])
+        listaRunning[0] = listaReady[0]
+        listaReady.pop(0)
+    else:
+        listaRunning[0].estado = 3
+        listaReady.append(listaRunning[0])
+        listaRunning[0] = listaReady[0]
+        listaReady.pop(0)
 
 # Metodo para leer datos de archivo
 def lecturaArchivo():
@@ -40,7 +72,7 @@ def lecturaArchivo():
     # Ciclo para crear los procesos leidos del archivo
     for i in range(numProcesos):
 
-        # llegada, tiempo total estimado y estado (1-running, 2-blocked, 3-ready)
+        # llegada, tiempo total estimado y estado (1-running, 2-blocked, 3-ready, 4-Finished)
         datosProceso = f.readline().replace(' ','').split(',')   
 
         llegada = int(datosProceso[0])
@@ -90,13 +122,22 @@ listaReady = []
 listaRunning = []
 listaBlocked = []
 listaNombres = []
+listaFinished = []
 
 pags, tiempoActual = lecturaArchivo()
 
 crearProceso(tiempoActual)
 
+algoritmoFIFO()
+
 #print(listaProcesos[0].printProceso())
 
-for i, proceso in enumerate(listaProcesos):
+for i, proceso in enumerate(listaReady):
     print(f'\n********* Proceso {i+1} **********')
     proceso.printProceso()
+
+print('\n******** RUNNING ********')
+print(listaRunning[0].printProceso())
+
+print('\n******** Finished ********')
+print(listaFinished[0].printProceso())
