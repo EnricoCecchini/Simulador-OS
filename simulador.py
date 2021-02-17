@@ -37,7 +37,7 @@ def agregarBlocked():
     listaBlocked.append(listaRunning[0])
     listaRunning.pop(0)
 
-def agrergarRunningReady():
+def agregarRunningReady():
     global listaRunning
     global listaReady
 
@@ -59,11 +59,11 @@ def manejoInterrupt(interrupcion):
     elif interrupcion == 2:
         agregarFinished()
     if interrupcion == 3:
-        agrergarRunningReady()
+        agregarRunningReady()
     elif interrupcion == 4:
         agregarFinished()
     if interrupcion == 5:
-        agrergarRunningReady()
+        agregarRunningReady()
     if interrupcion == 6:
         agregarBlocked()
 
@@ -94,7 +94,7 @@ def algoritmoRoundRobin():
     if not listaRunning or listaRunning[0].quantum == 0:    # Si la lista de Running esta vacia, agrega primer
         if listaRunning:                                    # proceso de Ready y lo quita de la lista, si no esta vacia
             listaRunning[0].quantum = 4                     # y se acabo el quantum del proceso actual, se resetea a 4,
-            agrergarRunningReady()                          # se envia el proceso a Ready y se agrega el siguiente
+            agregarRunningReady()                          # se envia el proceso a Ready y se agrega el siguiente
         listaRunning.append(listaReady[0])   
         listaReady.pop(0)                      
         algoritmoRoundRobin()
@@ -107,7 +107,25 @@ def algoritmoRoundRobin():
             agregarFinished()
         else:
             listaRunning[0].quantum = 4
-            agrergarRunningReady()
+            agregarRunningReady()
+
+# Metodo de SRT Apropiativo
+def algoritmoSRT():
+    global listaRunning
+    global listaReady
+
+    agregarRunningReady()                                   # Quita proceso que se esta ejecutando y lo agrega a Ready
+    procesoTemp = listaReady[0]
+
+    for proceso in listaReady:                              # Encuentra proceso que termina mas rapido                         
+        if proceso.cpuRestante < procesoTemp.cpuRestante:
+            procesoTemp.cpuRestante
+    
+    listaReady.remove(procesoTemp)                          # Pone el proceso mas corto al inicio de Ready
+    listaReady.add(procesoTemp)
+
+    listaRunning.append(listaReady[0])                      # Agrega proceso a Running
+    listaReady.remove[0]
 
 
 '''
