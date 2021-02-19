@@ -19,8 +19,9 @@ class Proceso:
         print("Paginas:", self.paginas)
         print("Tiempo Total:", self.tEjec)
         print("Estado:", self.estado)
-        print('CPU Restante', self.cpuRestante)
-        print('Edad', self.envejecimiento)
+        print('CPU Restante:', self.cpuRestante)
+        print('Edad:', self.envejecimiento)
+        print('Quantum Restante:', self.quantum)
 
 def agregarFinished():                                # Metodo para checar si ya termino un proceso
     global listaRunning
@@ -44,7 +45,7 @@ def agregarRunningReady():
     global listaRunning
     global listaReady
 
-    listaRunning.estado = 3
+    listaRunning[0].estado = 3
     listaReady.append(listaRunning[0])
     listaRunning.pop(0)
 
@@ -95,24 +96,28 @@ def algoritmoRoundRobin():
     global listaReady
     global listaRunning
 
+    if not listaReady:
+        return
+
     if not listaRunning or listaRunning[0].quantum == 0:    # Si la lista de Running esta vacia, agrega primer
         if listaRunning:                                    # proceso de Ready y lo quita de la lista, si no esta vacia
             listaRunning[0].quantum = 4                     # y se acabo el quantum del proceso actual, se resetea a 4,
-            agregarRunningReady()                          # se envia el proceso a Ready y se agrega el siguiente
+            agregarRunningReady() 
+            #algoritmoRoundRobin()                           # se envia el proceso a Ready y se agrega el siguiente
         listaRunning.append(listaReady[0])   
         listaReady.pop(0)                      
         algoritmoRoundRobin()
     
     if listaRunning[0].quantum > 0 or not cehcarFinProceso(): # Si el quantum es mayor a 0 y el proceso no ha terminado 
         listaRunning[0].quantum -= 1                          # se le resta 1
-        algoritmoRoundRobin()
+        #algoritmoRoundRobin()
 
     else:                                                     # Si se acaba el proceso se agreaga a Finished, si se acaba
         if cehcarFinProceso():                                # el quantum se agrega a Ready
             agregarFinished()
         else:
             listaRunning[0].quantum = 4
-            agregarRunningReady()
+            #agregarRunningReady()
 
 # Metodo de SRT Apropiativo
 def algoritmoSRT():
@@ -257,7 +262,31 @@ lecturaArchivo()
 # TESTING
 crearProceso()
 
-algoritmoSRT()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
+algoritmoRoundRobin()
 #algoritmoFIFO()
 
 print('\n****************** READY ******************')
