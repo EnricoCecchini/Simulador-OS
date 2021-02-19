@@ -119,27 +119,27 @@ def algoritmoSRT():
     global listaRunning
     global listaReady
 
-    if listaRunning():
+    if listaRunning:
         agregarRunningReady()                                   # Quita proceso que se esta ejecutando y lo agrega a Ready
     
     procesoTemp = listaReady[0]
 
     for proceso in listaReady:                              # Encuentra proceso que termina mas rapido                         
         if proceso.cpuRestante < procesoTemp.cpuRestante:
-            procesoTemp.cpuRestante
+            procesoTemp = proceso
     
     listaReady.remove(procesoTemp)                          # Pone el proceso mas corto al inicio de Ready
-    listaReady.add(procesoTemp)
+    listaReady.insert(0, procesoTemp)
 
     listaRunning.append(listaReady[0])                      # Agrega proceso a Running
-    listaReady.remove[0]
+    listaReady.pop(0)
 
 # Metodo de HRRN Apropiado
 def algoritmoHRRN():
     global listaRunning
     global listaReady
 
-    if not listaRunning():
+    if listaRunning:
         if cehcarFinProceso():
             agregarFinished()
             algoritmoHRRN()
@@ -149,20 +149,20 @@ def algoritmoHRRN():
 
     else:
         procesoTemp = listaReady[0]
-        prioridadTemp = (procesoTemp.Envejecimiento-procesoTemp.tEjec)/procesoTemp.tEjec
+        prioridadTemp = (procesoTemp.envejecimiento-procesoTemp.tEjec)/procesoTemp.tEjec
 
         for proceso in listaReady:
-            prioridadProceso = (proceso.Envejecimiento-proceso.tEjec)/proceso.tEjec
+            prioridadProceso = (proceso.envejecimiento-proceso.tEjec)/proceso.tEjec
             
             if prioridadProceso > prioridadTemp:
                 prioridadTemp = prioridadProceso
                 procesoTemp = proceso
         
         listaReady.remove(procesoTemp)                          # Pone el proceso con mas prioridad al inicio de Ready
-        listaReady.add(procesoTemp)
+        listaReady.insert(0, procesoTemp)
 
         listaRunning.append(listaReady[0])                      # Agrega proceso a Running
-        listaReady.remove[0]
+        listaReady.pop(0)
 
 # Metodo para leer datos de archivo
 def lecturaArchivo():
@@ -257,17 +257,23 @@ lecturaArchivo()
 # TESTING
 crearProceso()
 
-algoritmoFIFO()
-algoritmoFIFO()
+algoritmoSRT()
+#algoritmoFIFO()
 
-print('\n******** READY ********')
+print('\n****************** READY ******************')
 for i, proceso in enumerate(listaReady):
-    print(f'\n********* Proceso {i+1} **********')
+    print(f'********* Proceso {i+1} *********')
     proceso.printProceso()
+    print('\n')
 
-print('\n******** RUNNING ********')
-if listaRunning:
-    print(listaRunning[0].printProceso())
+print('\n****************** RUNNING ******************')
+for i, proceso in enumerate(listaRunning):
+    print(f'********* Proceso {i+1} *********')
+    proceso.printProceso()
+    print('\n')
 
-print('\n******** Finished ********')
-print(listaFinished[0].printProceso())
+print('\n****************** Finished ******************')
+for i, proceso in enumerate(listaFinished):
+    print(f'********* Proceso {i+1} *********')
+    proceso.printProceso()
+    print('\n')
