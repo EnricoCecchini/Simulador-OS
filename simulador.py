@@ -23,6 +23,19 @@ class Proceso:
         print('Edad:', self.envejecimiento)
         print('Quantum Restante:', self.quantum)
 
+def findRunning():
+    global listaReady
+
+    procesoTemp = listaReady[0]
+
+    for proceso in listaReady:
+        if proceso.estado == 1:
+            procesoTemp = proceso
+            break
+    
+    listaReady.remove(procesoTemp)                    # Pone el proceso ejecutandose al inicio de Ready
+    listaReady.insert(0, procesoTemp)
+
 def agregarFinished():                                # Metodo para checar si ya termino un proceso
     global listaRunning
     #global listaProcesos
@@ -258,35 +271,14 @@ tiempoActual = 0
 limitePags = 0
 
 lecturaArchivo()
+findRunning()
+
 
 # TESTING
 crearProceso()
 
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
-algoritmoRoundRobin()
+algoritmoFIFO()
+#manejoInterrupt(1)
 #algoritmoFIFO()
 
 print('\n****************** READY ******************')
@@ -297,6 +289,12 @@ for i, proceso in enumerate(listaReady):
 
 print('\n****************** RUNNING ******************')
 for i, proceso in enumerate(listaRunning):
+    print(f'********* Proceso {i+1} *********')
+    proceso.printProceso()
+    print('\n')
+
+print('\n****************** Blocked ******************')
+for i, proceso in enumerate(listaBlocked):
     print(f'********* Proceso {i+1} *********')
     proceso.printProceso()
     print('\n')
