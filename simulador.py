@@ -126,7 +126,7 @@ def algoritmoRoundRobin():
 
     if not listaRunning or listaRunning[0].quantum == 0:    # Si la lista de Running esta vacia, agrega primer
         if listaRunning:                                    # proceso de Ready y lo quita de la lista, si no esta vacia
-            listaRunning[0].quantum = 4                     # y se acabo el quantum del proceso actual, se resetea a 4,
+            listaRunning[0].quantum = 0                     # y se acabo el quantum del proceso actual, se resetea a 4,
             agregarRunningReady() 
             #algoritmoRoundRobin()                           # se envia el proceso a Ready y se agrega el siguiente
         listaRunning.append(listaReady[0])   
