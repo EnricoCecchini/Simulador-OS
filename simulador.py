@@ -70,15 +70,27 @@ def agregarBlockedReady():
     listaReady.append(listaBlocked[0])
     listaBlocked.pop(0)
 
+def agregarReady():
+    global listaReady
+    global listaRunning
+
+    if not listaRunning:
+        listaRunning.append(listaReady[0])
+        listaReady.pop(0)
+
 def manejoInterrupt(interrupcion):
     if interrupcion == 1:
         agregarBlocked()
+        agregarReady()
     elif interrupcion == 2:
         agregarFinished()
+        agregarReady()
     if interrupcion == 3:
         agregarRunningReady()
+        agregarReady()
     elif interrupcion == 4:
         agregarFinished()
+        agregarReady()
     if interrupcion == 5:
         agregarRunningReady()
     if interrupcion == 6:
