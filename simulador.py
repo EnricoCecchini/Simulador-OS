@@ -8,7 +8,7 @@ class Proceso:
         self.paginas = paginas
         self.tEjec = tEjec
         self.estado = estado
-        self.quantum = 4
+        self.quantum = 0
         self.cpuAsignado = 0
         self.cpuRestante = self.tEjec - self.cpuAsignado
         self.envejecimiento = tiempoActual - self.llegada - self.cpuAsignado
@@ -130,6 +130,7 @@ def algoritmoRoundRobin():
             agregarRunningReady() 
             #algoritmoRoundRobin()                           # se envia el proceso a Ready y se agrega el siguiente
         listaRunning.append(listaReady[0])   
+        listaRunning[0].quantum = 4
         listaReady.pop(0)                      
         algoritmoRoundRobin()
     
