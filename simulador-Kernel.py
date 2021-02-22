@@ -1,3 +1,8 @@
+'''
+Enrico Cecchini Rivera            - 531059  50%
+Carmen Aurora Monjaras Guajardo   - 531675  50%
+'''
+
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
@@ -106,7 +111,7 @@ def ShowChoice():
     if not checarFinProceso():
       agregarFinished()
 
-    label_TActual.config(text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 6))
+    label_TActual.config(text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 12))
     opcion=int(v.get())
     
     if opcion==1:
@@ -162,14 +167,14 @@ def ShowChoice():
       algoritmoHRRN()
     
     contador+=1
-    label_nom.config(text="Nombre: "+ str(listaRunning[0].nombre), font=('Times', 6))
-    label_llegada.config(text="Tiempo de llegada: "+ str(listaRunning[0].llegada), font=('Times', 6))
-    label_pag.config(text="Paginas: "+ str(listaRunning[0].paginas), font=('Times', 6))
-    label_tEjec.config(text="Tiempo estimado de ejecución: "+ str(listaRunning[0].tEjec), font=('Times', 6))
-    label_cpuA.config(text="CPU Asignado: "+ str(listaRunning[0].cpuAsignado), font=('Times', 6))
-    label_cpuR.config(text="CPU Restante: "+ str(listaRunning[0].cpuRestante), font=('Times', 6))
-    label_en.config(text="Envejecimiento: "+ str(listaRunning[0].Envejecimiento), font=('Times', 6))
-    label_q.config(text="Quantum Restante: "+ str(listaRunning[0].quantum), font=('Times', 6))
+    label_nom.config(text="Nombre: "+ str(listaRunning[0].nombre), font=('Times', 12))
+    label_llegada.config(text="Tiempo de llegada: "+ str(listaRunning[0].llegada), font=('Times', 12))
+    label_pag.config(text="Paginas: "+ str(listaRunning[0].paginas), font=('Times', 12))
+    label_tEjec.config(text="Tiempo estimado de ejecución: "+ str(listaRunning[0].tEjec), font=('Times', 12))
+    label_cpuA.config(text="CPU Asignado: "+ str(listaRunning[0].cpuAsignado), font=('Times', 12))
+    label_cpuR.config(text="CPU Restante: "+ str(listaRunning[0].cpuRestante), font=('Times', 12))
+    label_en.config(text="Envejecimiento: "+ str(listaRunning[0].Envejecimiento), font=('Times', 12))
+    label_q.config(text="Quantum Restante: "+ str(listaRunning[0].quantum), font=('Times', 12))
 
     if contador%5 == 0 and listaBlocked:
       listaBlocked[0].estado=3
@@ -363,7 +368,7 @@ def execTime():
   global label_nom, label_llegada, label_pag, label_tEjec, label_cpuA, label_cpuR, label_en, label_q
   try:
     tiempoActual+=1
-    label_TActual.config(text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 6))
+    label_TActual.config(text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 12))
     contador+=1
     
     for process in listaRunning: # agrega 1 a cpu asignado
@@ -392,14 +397,14 @@ def execTime():
     elif opcion==4: #HRRn
       print("HRRN")
       algoritmoHRRN()
-    label_nom.config(text="Nombre: "+ str(listaRunning[0].nombre), font=('Times', 6))
-    label_llegada.config(text="Tiempo de llegada: "+ str(listaRunning[0].llegada), font=('Times', 6))
-    label_pag.config(text="Paginas: "+ str(listaRunning[0].paginas), font=('Times', 6))
-    label_tEjec.config(text="Tiempo estimado de ejecución: "+ str(listaRunning[0].tEjec), font=('Times', 6))
-    label_cpuA.config(text="CPU Asignado: "+ str(listaRunning[0].cpuAsignado), font=('Times', 6))
-    label_cpuR.config(text="CPU Restante: "+ str(listaRunning[0].cpuRestante), font=('Times', 6))
-    label_en.config(text="Envejecimiento: "+ str(listaRunning[0].Envejecimiento), font=('Times', 6))
-    label_q.config(text="Quantum Restante: "+ str(listaRunning[0].quantum), font=('Times', 6))
+    label_nom.config(text="Nombre: "+ str(listaRunning[0].nombre), font=('Times', 12))
+    label_llegada.config(text="Tiempo de llegada: "+ str(listaRunning[0].llegada), font=('Times', 12))
+    label_pag.config(text="Paginas: "+ str(listaRunning[0].paginas), font=('Times', 12))
+    label_tEjec.config(text="Tiempo estimado de ejecución: "+ str(listaRunning[0].tEjec), font=('Times', 12))
+    label_cpuA.config(text="CPU Asignado: "+ str(listaRunning[0].cpuAsignado), font=('Times', 12))
+    label_cpuR.config(text="CPU Restante: "+ str(listaRunning[0].cpuRestante), font=('Times', 12))
+    label_en.config(text="Envejecimiento: "+ str(listaRunning[0].Envejecimiento), font=('Times', 12))
+    label_q.config(text="Quantum Restante: "+ str(listaRunning[0].quantum), font=('Times', 12))
 
     if contador%5 == 0 and listaBlocked:
       listaBlocked[0].estado=3
@@ -543,12 +548,12 @@ window.title("Kernel Project")
 #parte de arriba
 frameTop = tk.Frame( master=window, width=100, height=25, bg="grey")
 frameTop.pack(fill=tk.BOTH, expand=True)
-label_TActual = tk.Label(frameTop, text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 6))
+label_TActual = tk.Label(frameTop, text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 12))
 label_TActual.pack()
-button_next= tk.Button(frameTop, text="Ejecutar", width=3, height=2, font=('Times', 6), command = execTime)
+button_next= tk.Button(frameTop, text="Ejecutar", width=8, height=2, font=('Times', 12), command = execTime)
 button_next.pack()
 
-labelI = tk.Label(frameTop, text="Escoja una interrupcion", font=('Times', 8))
+labelI = tk.Label(frameTop, text="Escoja una interrupcion", font=('Times', 12))
 labelI.pack()
 v = tk.IntVar()
 v.set(None)
@@ -565,11 +570,11 @@ for choice, val in interrupciones:
                    text=choice,
                    padx = 20, 
                    variable=v, 
-                   font=('Times', 6), 
+                   font=('Times', 12), 
                    command=ShowChoice,
                    value=val).pack(anchor=tk.W)
 
-button_refresh= tk.Button(frameTop, text="Refresh", width=5, height=2, font=('Times', 6), command=refresh)
+button_refresh= tk.Button(frameTop, text="Refresh", width=5, height=2, font=('Times', 12), command=refresh)
 button_refresh.pack()
 # segunda parte del gui
 frameCPU = tk.Frame(master=window, width=100, height=100, bg="red")
@@ -581,9 +586,9 @@ def show_entry_fields():#añadir proceso al oprimir botón
     crearProceso(listaReady, tiempoActual)
 
 #fields= "Nombre", "Pags", "Ejec Total"
-tk.Label(frameCPU, text="Nombre", font=('Times', 6)).grid(row=0)
-tk.Label(frameCPU, text="Pags", font=('Times', 6)).grid(row=1)
-tk.Label(frameCPU, text="Ejec total", font=('Times', 6)).grid(row=2)
+tk.Label(frameCPU, text="Nombre", font=('Times', 12)).grid(row=0)
+tk.Label(frameCPU, text="Pags", font=('Times', 12)).grid(row=1)
+tk.Label(frameCPU, text="Ejec total", font=('Times', 12)).grid(row=2)
 
 e1 = tk.Entry(frameCPU) #Nombre de proceso
 e2 = tk.Entry(frameCPU) #Num de pags
@@ -593,15 +598,15 @@ e1.grid(row=0, column=1)
 e2.grid(row=1, column=1)
 e3.grid(row=2, column=1)
 
-tk.Button(frameCPU,text='Add', font=('Times', 6), command=show_entry_fields).grid(row=3, column=1, sticky=tk.W, pady=4)
+tk.Button(frameCPU,text='Add', font=('Times', 12), command=show_entry_fields).grid(row=3, column=1, sticky=tk.W, pady=4)
 #Listas
-label_ready=tk.Label(frameCPU, text="Ready", font=('Times', 6)).grid(row=4)
-label_run=tk.Label(frameCPU, text="Running", font=('Times', 6)).grid(row=4, column=1)
-label_fin=tk.Label(frameCPU, text="Finished", font=('Times', 6)).grid(row=4, column=2)
+label_ready=tk.Label(frameCPU, text="Ready", font=('Times', 12)).grid(row=4)
+label_run=tk.Label(frameCPU, text="Running", font=('Times', 12)).grid(row=4, column=1)
+label_fin=tk.Label(frameCPU, text="Finished", font=('Times', 12)).grid(row=4, column=2)
 
-Lbready = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 5))
-Lbrun = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 5))
-Lbfin = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 5))
+Lbready = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 12))
+Lbrun = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 12))
+Lbfin = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 12))
 
 Lbready.grid(row=5)
 Lbrun.grid(row=5, column=1)
@@ -627,10 +632,10 @@ print_lists()
 #tercera parte del gui "Schedule"
 frameSchedule = tk.Frame(master=window, width=100, height=50, bg="yellow")
 frameSchedule.pack(fill=tk.BOTH, expand=True)
-label_schedule=tk.Label(frameSchedule, text="Scheduling", font=('Times', 6))
+label_schedule=tk.Label(frameSchedule, text="Scheduling", font=('Times', 12))
 label_schedule.pack()
 
-labelC = tk.Label(frameSchedule, text="CPU", font=('Times', 8))
+labelC = tk.Label(frameSchedule, text="CPU", font=('Times', 12))
 labelC.pack()
 x = tk.IntVar()
 x.set(1)
@@ -645,29 +650,29 @@ for opciones, val in opcionesCPU: #opciones de scheduling, comand = ShowCPU
                    text=opciones,
                    padx = 20, 
                    variable=x,
-                   font=('Times', 6), 
+                   font=('Times', 12), 
                    command=ShowCPU,
                    value=val).pack(anchor=tk.W)
 
 
     #Mostrar proceso en estado de running
-label_nom=tk.Label(frameSchedule, text="Nombre: "+str(listaRunning[0].nombre), font=('Times', 6))
+label_nom=tk.Label(frameSchedule, text="Nombre: "+str(listaRunning[0].nombre), font=('Times', 12))
 label_nom.pack()
-label_llegada=tk.Label(frameSchedule, text="Tiempo de llegada: "+str(listaRunning[0].llegada), font=('Times', 6))
+label_llegada=tk.Label(frameSchedule, text="Tiempo de llegada: "+str(listaRunning[0].llegada), font=('Times', 12))
 label_llegada.pack()
-label_pag=tk.Label(frameSchedule, text="Paginas: "+str(listaRunning[0].paginas), font=('Times', 6))
+label_pag=tk.Label(frameSchedule, text="Paginas: "+str(listaRunning[0].paginas), font=('Times', 12))
 label_pag.pack()
-label_tEjec=tk.Label(frameSchedule, text="Tiempo estimado de Ejecución: "+str(listaRunning[0].tEjec), font=('Times', 6))
+label_tEjec=tk.Label(frameSchedule, text="Tiempo estimado de Ejecución: "+str(listaRunning[0].tEjec), font=('Times', 12))
 label_tEjec.pack()
-label_cpuA=tk.Label(frameSchedule, text="CPU asignado: "+str(listaRunning[0].cpuAsignado), font=('Times', 6))
+label_cpuA=tk.Label(frameSchedule, text="CPU asignado: "+str(listaRunning[0].cpuAsignado), font=('Times', 12))
 label_cpuA.pack()
-label_cpuR=tk.Label(frameSchedule, text="CPU Restante: "+str(listaRunning[0].cpuRestante), font=('Times', 6))
+label_cpuR=tk.Label(frameSchedule, text="CPU Restante: "+str(listaRunning[0].cpuRestante), font=('Times', 12))
 label_cpuR.pack()
-label_en=tk.Label(frameSchedule, text="Envejecimiento: "+str(listaRunning[0].Envejecimiento), font=('Times', 6))
+label_en=tk.Label(frameSchedule, text="Envejecimiento: "+str(listaRunning[0].Envejecimiento), font=('Times', 12))
 label_en.pack()
-label_q=tk.Label(frameSchedule, text="Quantum Restante: "+str(listaRunning[0].quantum), font=('Times', 6))
+label_q=tk.Label(frameSchedule, text="Quantum Restante: "+str(listaRunning[0].quantum), font=('Times', 12))
 label_q.pack()
-quantumRequest=tk.Label(frameSchedule, text="Quantum", font=('Times', 6))
+quantumRequest=tk.Label(frameSchedule, text="Quantum", font=('Times', 12))
 e4=tk.Entry()
 numQ=e4.get()
 e4.pack()
