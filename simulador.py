@@ -41,10 +41,18 @@ def agregarFinished():                                # Metodo para checar si ya
     #global listaProcesos
     global listaFinished
                
-    listaRunning[0].estado = 4
-    listaFinished.append(listaRunning[0])
-    listaRunning.pop()
-
+    try:
+      if listaRunning[0].cpuRestante == 0:
+        listaRunning[0].estado = 4
+        listaFinished.append(listaRunning[0])
+        listaRunning.pop()
+        
+      else:
+        listaRunning[0].estado = 4
+        listaFinished.append(listaRunning[0])
+    
+    except IndexError:
+      pass
 def agregarBlocked():
     global listaRunning
     #global listaProcesos
@@ -96,7 +104,7 @@ def manejoInterrupt(interrupcion):
     if interrupcion == 6:
         agregarBlocked()
 
-def cehcarFinProceso():
+def checarFinProceso():
     global listaRunning
 
     if listaRunning[0].tEjec < 1:
@@ -113,7 +121,7 @@ def algoritmoFIFO():
         # Agregar metodo para continuar hasta que termine
         algoritmoFIFO()
 
-    elif cehcarFinProceso():                    # Si se termino el proceso, se cambia el estado, se agrega
+    elif checarFinProceso():                    # Si se termino el proceso, se cambia el estado, se agrega
         agregarFinished()
 
 # Metodo de Round Robin
@@ -134,12 +142,12 @@ def algoritmoRoundRobin():
         listaReady.pop(0)                      
         algoritmoRoundRobin()
     
-    if listaRunning[0].quantum > 0 or not cehcarFinProceso(): # Si el quantum es mayor a 0 y el proceso no ha terminado 
+    if listaRunning[0].quantum > 0 or not checarFinProceso(): # Si el quantum es mayor a 0 y el proceso no ha terminado 
         listaRunning[0].quantum -= 1                          # se le resta 1
         #algoritmoRoundRobin()
 
     else:                                                     # Si se acaba el proceso se agreaga a Finished, si se acaba
-        if cehcarFinProceso():                                # el quantum se agrega a Ready
+        if checarFinProceso():                                # el quantum se agrega a Ready
             agregarFinished()
         else:
             listaRunning[0].quantum = 4
@@ -171,7 +179,7 @@ def algoritmoHRRN():
     global listaReady
 
     if listaRunning:
-        if cehcarFinProceso():
+        if checarFinProceso():
             agregarFinished()
             algoritmoHRRN()
         else:
