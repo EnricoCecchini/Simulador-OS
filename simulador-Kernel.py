@@ -1,8 +1,3 @@
-'''
-Enrico Cecchini Rivera            - 531059  50%
-Carmen Aurora Monjaras Guajardo   - 531675  50%
-'''
-
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox

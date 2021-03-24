@@ -2,12 +2,13 @@
 class Proceso:
     global tiempoActual
 
-    def __init__(self, nombre, llegada, paginas, tEjec, estado):
+    def __init__(self, nombre, llegada, paginas, tEjec, estado, listaPags):
         self.nombre = nombre
         self.llegada = llegada
         self.paginas = paginas
         self.tEjec = tEjec
         self.estado = estado
+        self.listaPags = listaPags
         self.quantum = 0
         self.cpuAsignado = 0
         self.cpuRestante = self.tEjec - self.cpuAsignado
@@ -23,6 +24,27 @@ class Proceso:
         print('Edad:', self.envejecimiento)
         print('Quantum Restante:', self.quantum)
 
+        if self.estado == 1:
+            print('Paginas:')
+            for pag in listaPags:
+                print(pag, 'n')
+
+# ****************** Algoritmos de Paginacion ******************
+
+def pagFIFO():
+    pass
+
+def pagLRU():
+    pass
+
+def pagLFU():
+    pass
+
+def pagNUR():
+    pass
+
+
+# ****************** Algoritmos de Scheduling ******************
 def findRunning():
     global listaReady
 
@@ -53,6 +75,7 @@ def agregarFinished():                                # Metodo para checar si ya
     
     except IndexError:
       pass
+    
 def agregarBlocked():
     global listaRunning
     #global listaProcesos
@@ -237,11 +260,13 @@ def lecturaArchivo():
         estado = int(datosProceso[2])
 
         numPags = int(f.readline())
+        listaPags = []
 
         for pag in range(numPags):
-            f.readline()
+            pags = f.readline().replace(' ','').split(',')
+            listaPags.append(pags)
 
-        procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado)
+        procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado, listaPags)
 
         #listaProcesos.append(procesoNuevo) 
         listaReady.append(procesoNuevo)
@@ -273,7 +298,13 @@ def crearProceso():
     tiempoTotal = int(input('Tiempo de Ejecucion: '))
     llegada = tiempoActual
 
-    procesoNuevo = Proceso(nombre, llegada, paginas, tiempoTotal, 3)
+    listaPags = []
+    
+    for i in range(paginas):
+        pag = [i, 0, 0, 0, 0, 0]
+        listaPags.appen()
+
+    procesoNuevo = Proceso(nombre, llegada, paginas, tiempoTotal, 3, listaPags)
 
     #listaProcesos.append(procesoNuevo)
     listaReady.append(procesoNuevo)
