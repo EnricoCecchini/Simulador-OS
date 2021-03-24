@@ -26,8 +26,8 @@ class Proceso:
 
         if self.estado == 1:
             print('Paginas:')
-            for pag in listaPags:
-                print(pag, 'n')
+            for pag in self.listaPags:
+                print(pag)
 
 # ****************** Algoritmos de Paginacion ******************
 
@@ -263,8 +263,18 @@ def lecturaArchivo():
         listaPags = []
 
         for pag in range(numPags):
-            pags = f.readline().replace(' ','').split(',')
-            listaPags.append(pags)
+            pags = f.readline().replace(' ','').replace('\n','').split(',')
+            res = int(pags[0])
+            tLlegada = int(pags[1])
+            ultAccess = int(pags[2])
+            numAccess = int(pags[3])
+            NUR = int(pags[4])
+
+            # No se menciona que es en el Doc
+            otro = int(pags[5])
+
+            page = [res, tLlegada, ultAccess, numAccess, NUR, otro]
+            listaPags.append(page)
 
         procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado, listaPags)
 
@@ -302,7 +312,7 @@ def crearProceso():
     
     for i in range(paginas):
         pag = [i, 0, 0, 0, 0, 0]
-        listaPags.appen()
+        listaPags.append(pag)
 
     procesoNuevo = Proceso(nombre, llegada, paginas, tiempoTotal, 3, listaPags)
 
@@ -327,7 +337,7 @@ findRunning()
 
 
 # TESTING
-crearProceso()
+#crearProceso()
 
 algoritmoFIFO()
 #manejoInterrupt(1)
