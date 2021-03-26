@@ -1,3 +1,10 @@
+'''
+Enrico Cecchini Rivera  - 531059  50%
+Carmen Aurora Monjaras  - 531675  50%
+
+Declaramos que hemos realizado esta actividad con integridad academica
+'''
+
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
@@ -42,10 +49,17 @@ def agregarBlocked():
     #global listaProcesos
     global listaBlocked
     global Lbrun
+    global lbB
     listaRunning[0].estado = 2
     listaBlocked.append(listaRunning[0])
     Lbrun.delete(0,END)
     listaRunning.pop(0)
+    LbB.delete(0,END)
+    i=1
+    for process in listaBlocked:
+      LbB.insert(i, process.nombre)
+      i=i+1
+
 
 # Metodo para agregar procesos de Running a Ready
 def agregarRunningReady():
@@ -70,6 +84,11 @@ def agregarBlockedReady():
     nom=listaBlocked[0].nombre
     Lbready.insert(END,nom)
     listaBlocked.pop(0)
+    LbB.delete(0,END)
+    i=1
+    for process in listaBlocked:
+      LbB.insert(i, process.nombre)
+      i=i+1
 
 # Metodo para agregar procesos de Ready a Running
 def agregarReady():
@@ -98,6 +117,7 @@ def ShowChoice():
   global Lbready
   global Lbrun
   global Lbfin
+  global lbB
   global label_nom, label_llegada, label_pag, label_tEjec, label_cpuA, label_cpuR, label_en, label_q  
   
   try:
@@ -192,6 +212,9 @@ def ShowChoice():
     Lbready.insert(END, process.nombre)
   for process in listaRunning:
     Lbrun.insert(END, process.nombre)
+  LbB.delete(0,END)
+  for process in listaBlocked:
+    LbB.insert(END, process.nombre)
   
 
 def ShowCPU():
@@ -423,6 +446,9 @@ def execTime():
     Lbready.insert(END, process.nombre)
   for process in listaRunning:
     Lbrun.insert(END, process.nombre)
+  LbB.delete(0,END)
+  for process in listaBlocked:
+    LbB.insert(END, process.nombre)
   
 def refresh():
   #resetea las opciones de las interrupciones
@@ -545,10 +571,10 @@ frameTop = tk.Frame( master=window, width=100, height=25, bg="grey")
 frameTop.pack(fill=tk.BOTH, expand=True)
 label_TActual = tk.Label(frameTop, text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 12))
 label_TActual.pack()
-button_next= tk.Button(frameTop, text="Ejecutar", width=8, height=2, font=('Times', 12), command = execTime)
+button_next= tk.Button(frameTop, text="Ejecutar", width=3, height=2, font=('Times', 12), command = execTime)
 button_next.pack()
 
-labelI = tk.Label(frameTop, text="Escoja una interrupcion", font=('Times', 12))
+labelI = tk.Label(frameTop, text="Escoja una interrupcion", font=('Times', 14))
 labelI.pack()
 v = tk.IntVar()
 v.set(None)
@@ -598,17 +624,20 @@ tk.Button(frameCPU,text='Add', font=('Times', 12), command=show_entry_fields).gr
 label_ready=tk.Label(frameCPU, text="Ready", font=('Times', 12)).grid(row=4)
 label_run=tk.Label(frameCPU, text="Running", font=('Times', 12)).grid(row=4, column=1)
 label_fin=tk.Label(frameCPU, text="Finished", font=('Times', 12)).grid(row=4, column=2)
+label_B=tk.Label(frameCPU, text="Blocked", font=('Times', 12)).grid(row=4, column=3)
 
 Lbready = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 12))
 Lbrun = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 12))
 Lbfin = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 12))
+LbB = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 12))
 
 Lbready.grid(row=5)
 Lbrun.grid(row=5, column=1)
 Lbfin.grid(row=5, column=2)
+LbB.grid(row=5, column=3)
 
 def print_lists():# para agregar en las listbox
-  global listaReady, listaRunning, listaFinished, Lbready, Lbrun, Lbfin
+  global listaReady, listaRunning, listaFinished, listaBlocked, Lbready, Lbrun, Lbfin, LbB
   i=1
   for process in listaReady:
     Lbready.insert(i, process.nombre)
@@ -621,6 +650,10 @@ def print_lists():# para agregar en las listbox
   for process in listaFinished:
     Lbfin.insert(i, process.nombre)
     i=i+1
+  i=1
+  for process in listaBlocked:
+    LbB.insert(i, process.nombre)
+    i=i+1
 
 print_lists()
 
@@ -630,7 +663,7 @@ frameSchedule.pack(fill=tk.BOTH, expand=True)
 label_schedule=tk.Label(frameSchedule, text="Scheduling", font=('Times', 12))
 label_schedule.pack()
 
-labelC = tk.Label(frameSchedule, text="CPU", font=('Times', 12))
+labelC = tk.Label(frameSchedule, text="CPU", font=('Times', 14))
 labelC.pack()
 x = tk.IntVar()
 x.set(1)
@@ -669,9 +702,13 @@ label_q=tk.Label(frameSchedule, text="Quantum Restante: "+str(listaRunning[0].qu
 label_q.pack()
 quantumRequest=tk.Label(frameSchedule, text="Quantum", font=('Times', 12))
 e4=tk.Entry()
-numQ=e4.get()
 e4.pack()
 quantumRequest.pack()
+def showQ():
+  if e4.get():
+    numQ=int(e4.get())
+button_addQ= tk.Button(frameSchedule, text="Add", width=5, height=2, font=('Times', 12), command=showQ)
+button_addQ.pack()
 
 frameMemory = tk.Frame(master=window, width=100, height=50, bg="blue")
 frameMemory.pack(side="bottom", fill=tk.BOTH, expand=True)
