@@ -33,17 +33,107 @@ class Proceso:
 
 # ****************** Algoritmos de Paginacion ******************
 
+# Metodo para resetear valores de NUR
 def resetNur():
     global listaRunning
 
-def pagFIFO():
-    pass
+    for i in range(len(listaRunning[0].listaPags)):
+        listaRunning[0].listaPags[i][5] = 0
+        listaRunning[0].listaPags[i][6] = 0
 
-def pagLRU():
-    pass
+def pagFIFO(limitePags):
+    global listaRunning
 
-def pagLFU():
-    pass
+    tiempoTempNuevo = listaRunning[0].listaPags[0][2]
+    tiempoTempViejo = listaRunning[0].listaPags[0][2]
+    indexNuevo = 0
+    indexViejo = 0
+    pagsAct = 0
+
+    # Se iteran las paginas para encontrar la primera en llegar no activada y la mas vieja activada
+    for i in range(len(listaRunning[0].listaPags)):
+        if tiempoTempNuevo > listaRunning[0].listaPags[i][2] and listaRunning[0].listaPags[i][1] == 0:
+            indexNuevo = i
+            tiempoTempNuevo = listaRunning[0].listaPags[i][2]
+        
+        if tiempoTempViejo < listaRunning[0].listaPags[i][2] and listaRunning[0].listaPags[i][1] == 1:
+            indexViejo = i
+            tiempoTempViejo = listaRunning[0].listaPags[i][2]
+
+        if listaRunning[0].listaPags[i][1] == 1:
+            pagsAct += 1
+    
+    # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
+    if pagsAct < limitePags:
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+
+    # Si no, se apaga la pagina vieja y activa la nueva
+    else:
+        listaRunning[0].listaPags[indexViejo][1] = 0
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+        
+
+def pagLRU(limitePags):
+    global listaRunning
+
+    accesoTempNuevo = listaRunning[0].listaPags[0][3]
+    accesoTempViejo = listaRunning[0].listaPags[0][3]
+    indexNuevo = 0
+    indexViejo = 0
+    pagsAct = 0
+
+    # Se iteran las paginas para encontrar la pagina con mas tiempo sin accesar y la mas recientemente accesada
+    for i in range(len(listaRunning[0].listaPags)):
+        if accesoTempNuevo > listaRunning[0].listaPags[i][3] and listaRunning[0].listaPags[i][1] == 0:
+            indexNuevo = i
+            accesoTempNuevo = listaRunning[0].listaPags[i][3]
+        
+        if accesoTempViejo < listaRunning[0].listaPags[i][3] and listaRunning[0].listaPags[i][1] == 1:
+            indexViejo = i
+            accesoTempViejo = listaRunning[0].listaPags[i][3]
+
+        if listaRunning[0].listaPags[i][1] == 1:
+            pagsAct += 1
+    
+    # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
+    if pagsAct < limitePags:
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+
+    # Si no, se apaga la pagina vieja y activa la nueva
+    else:
+        listaRunning[0].listaPags[indexViejo][1] = 0
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+
+def pagLFU(limitePags):
+    global listaRunning
+
+    nAccesosTempNuevo = listaRunning[0].listaPags[0][3]
+    nAccesosTempViejo = listaRunning[0].listaPags[0][3]
+    indexNuevo = 0
+    indexViejo = 0
+    pagsAct = 0
+
+    # Se iteran las paginas para encontrar la pagina con mas tiempo sin accesar y la mas recientemente accesada
+    for i in range(len(listaRunning[0].listaPags)):
+        if nAccesosTempNuevo > listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 0:
+            indexNuevo = i
+            nAccesosTempNuevo = listaRunning[0].listaPags[i][4]
+        
+        if nAccesosTempViejo < listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 1:
+            indexViejo = i
+            nAccesosTempViejo = listaRunning[0].listaPags[i][4]
+
+        if listaRunning[0].listaPags[i][1] == 1:
+            pagsAct += 1
+    
+    # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
+    if pagsAct < limitePags:
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+
+    # Si no, se apaga la pagina vieja y activa la nueva
+    else:
+        listaRunning[0].listaPags[indexViejo][1] = 0
+        listaRunning[0].listaPags[indexNuevo][1] = 1
 
 def pagNUR():
     pass
@@ -389,6 +479,14 @@ for i, proceso in enumerate(listaBlocked):
 
 print('\n****************** Finished ******************')
 for i, proceso in enumerate(listaFinished):
+    print(f'********* Proceso {i+1} *********')
+    proceso.printProceso()
+    print('\n')
+
+resetNur()
+
+print('\n****************** RUNNING ******************')
+for i, proceso in enumerate(listaRunning):
     print(f'********* Proceso {i+1} *********')
     proceso.printProceso()
     print('\n')
