@@ -41,7 +41,9 @@ def resetNur():
         listaRunning[0].listaPags[i][5] = 0
         listaRunning[0].listaPags[i][6] = 0
 
-def pagFIFO(limitePags):
+# Algoritmo de Paginacion FIFO
+def pagFIFO():
+    global limitePags
     global listaRunning
 
     tiempoTempNuevo = listaRunning[0].listaPags[0][2]
@@ -73,7 +75,9 @@ def pagFIFO(limitePags):
         listaRunning[0].listaPags[indexNuevo][1] = 1
         
 
-def pagLRU(limitePags):
+# Algoritmo de Paginacion LRU
+def pagLRU():
+    global limitePags
     global listaRunning
 
     accesoTempNuevo = listaRunning[0].listaPags[0][3]
@@ -104,7 +108,9 @@ def pagLRU(limitePags):
         listaRunning[0].listaPags[indexViejo][1] = 0
         listaRunning[0].listaPags[indexNuevo][1] = 1
 
-def pagLFU(limitePags):
+# Algoritmo de Paginacion LFU
+def pagLFU():
+    global limitePags
     global listaRunning
 
     nAccesosTempNuevo = listaRunning[0].listaPags[0][3]
@@ -136,7 +142,37 @@ def pagLFU(limitePags):
         listaRunning[0].listaPags[indexNuevo][1] = 1
 
 def pagNUR():
-    pass
+    global limitePags
+    global listaRunning
+    
+    prioridad0 = []
+    prioridad1 = []
+    prioridad2 = []
+    prioridad3 = []
+
+    pagAct = 0
+    for i in range(len(listaRunning[0].listaPags)):
+        if listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
+            prioridad0.append(i)
+        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
+            prioridad1.append(i)
+        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 1:
+            prioridad2.append(i)
+        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
+            prioridad3.append(i)
+        
+        if listaRunning[0].listaPags[i][1] == 1:
+            pagAct+=1
+
+    prioridad0.append(prioridad1).append(prioridad2).append.prioridad3()
+
+    if pagAct < limitePags:
+        listaRunning[0].listaPags[prioridad0[0]][1] = 1
+    
+    else:
+        listaRunning[0].listaPags[prioridad0[-1]][1] = 0
+        listaRunning[0].listaPags[prioridad0[0]][1] = 0
+
 
 
 # ****************** Algoritmos de Scheduling ******************
@@ -343,55 +379,32 @@ def lecturaArchivo():
     tiempoActual = int(data[1])                              # Tiempo actual
 
     numProcesos = int(f.readline())                          # Numero de procesos
-    prevLine = []
+
     # Ciclo para crear los procesos leidos del archivo
     for i in range(numProcesos):
+        # llegada, tiempo total estimado y estado (1-running, 2-blocked, 3-ready)
+        datosProceso = f.readline().replace(' ','').split(',')   
+        llegada = int(datosProceso[0])
+        tiempoTotal = int(datosProceso[1])
+        estado = int(datosProceso[2])
+        numPags = int(f.readline())
+        listaPags = []
         
-        read = True
+        n = 0
+        for pag in range(numPags):
+            pags = f.readline().replace(' ','').replace('\n','').split(',')
+            res = int(pags[0])
+            tLlegada = int(pags[1])
+            ultAccess = int(pags[2])
+            numAccess = int(pags[3])
+            bitLectura = int(pags[4])
+            bitEscritura = int(pags[5])
 
-        if i == 0:
+            page = [n, res, tLlegada, ultAccess, numAccess, bitLectura, bitEscritura]
+            listaPags.append(page)
 
-            # llegada, tiempo total estimado y estado (1-running, 2-blocked, 3-ready, 4-Finished)
-            datosProceso = f.readline().replace(' ','').split(',')   
+            n+=1
 
-            llegada = int(datosProceso[0])
-            tiempoTotal = int(datosProceso[1])
-            estado = int(datosProceso[2])
-
-            numPags = int(f.readline())
-            listaPags = []
-        
-        elif not prevLine:
-            # llegada, tiempo total estimado y estado (1-running, 2-blocked, 3-ready, 4-Finished)
-            llegada = int(prevLine[0])
-            tiempoTotal = int(prevLine[1])
-            estado = int(prevLine[2])
-
-            numPags = int(f.readline())
-            listaPags = []
-
-        else:
-            read = False
-        i = 0
-        pags = []
-        if read == True:
-            while len(pags) == 0 or len(pags) == 6:
-                pags = f.readline().replace(' ','').replace('\n','').split(',')
-                if len(pags) == 3:
-                    prevLine = pags
-                    break
-                res = int(pags[0])
-                tLlegada = int(pags[1])
-                ultAccess = int(pags[2])
-                numAccess = int(pags[3])
-                bitLectura = int(pags[4])
-                bitEscritura = int(pags[5])
-
-                page = [i, res, tLlegada, ultAccess, numAccess, bitLectura, bitEscritura]
-                listaPags.append(page)
-
-                i+=1
-    
         procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado, listaPags)
 
         #listaProcesos.append(procesoNuevo) 
@@ -483,7 +496,7 @@ for i, proceso in enumerate(listaFinished):
     proceso.printProceso()
     print('\n')
 
-resetNur()
+pagLRU()
 
 print('\n****************** RUNNING ******************')
 for i, proceso in enumerate(listaRunning):
