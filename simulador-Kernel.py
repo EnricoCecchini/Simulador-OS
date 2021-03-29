@@ -5,6 +5,11 @@ Carmen Aurora Monjaras  - 531675  50%
 Declaramos que hemos realizado esta actividad con integridad academica
 '''
 
+'''
+Notas:
+No se pasa primer proceso de blocked a Ready, y se duplican nombres cuando se pasan
+'''
+
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
@@ -18,6 +23,8 @@ def agregarFinished():
     global listaReady
     global Lbrun
     global Lbfin
+    global label_page
+
     
     try:
       if listaRunning[0].cpuRestante == 0:
@@ -43,6 +50,9 @@ def agregarFinished():
       Lbfin.insert(END, process.nombre)
     
 
+    
+    
+
 # Metodo para agregar procesos de Running a Blocked
 def agregarBlocked():
     global listaRunning
@@ -50,6 +60,9 @@ def agregarBlocked():
     global listaBlocked
     global Lbrun
     global lbB
+    global label_page
+    global tkvar1
+    global popupMenuP
     listaRunning[0].estado = 2
     listaBlocked.append(listaRunning[0])
     Lbrun.delete(0,END)
@@ -61,27 +74,37 @@ def agregarBlocked():
       i=i+1
 
 
+
 # Metodo para agregar procesos de Running a Ready
 def agregarRunningReady():
     global listaRunning
     global listaReady
     global Lbrun
     global Lbready
-    
+    global label_page
+    global tkvar1
+    global popupMenuP
+  
     listaRunning[0].estado = 3
     listaReady.append(listaRunning[0])
     Lbready.insert(END, listaRunning[0].nombre)
     Lbrun.delete(0, END)
     listaRunning.pop(0)
 
+
 # Metodo para agregar procesos de Blocked a Ready
 def agregarBlockedReady():
     global listaBlocked
     global listaReady
     global Lbready
-    listaBlocked[0].estado = 3
-    listaReady.append(listaBlocked[0])
-    nom=listaBlocked[0].nombre
+    global label_page
+    global tkvar1
+    global popupMenuP
+
+    procesoTemp = listaBlocked[0]
+    procesoTemp.estado = 3
+    listaReady.append(procesoTemp)
+    nom=procesoTemp.nombre
     Lbready.insert(END,nom)
     listaBlocked.pop(0)
     LbB.delete(0,END)
@@ -90,12 +113,16 @@ def agregarBlockedReady():
       LbB.insert(i, process.nombre)
       i=i+1
 
+
 # Metodo para agregar procesos de Ready a Running
 def agregarReady():
     global listaReady
     global listaRunning
     global Lbready
     global Lbrun
+    global label_page
+    global tkvar1
+    global popupMenuP
     
     try:
       if not listaRunning:
@@ -106,6 +133,7 @@ def agregarReady():
           Lbrun.insert(END, nom)
     except IndexError:
       pass
+
     
 
 def ShowChoice():
@@ -118,15 +146,15 @@ def ShowChoice():
   global Lbrun
   global Lbfin
   global lbB
-  global label_nom, label_llegada, label_pag, label_tEjec, label_cpuA, label_cpuR, label_en, label_q  
+  global label_nom, label_llegada, label_pag, label_tEjec, label_cpuA, label_cpuR, label_en, label_q
+  global popupMenuP 
+  global tkvar1 
   
   try:
     tiempoActual+=1
-
     if not checarFinProceso():
       agregarFinished()
-
-    label_TActual.config(text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 12))
+    label_TActual.config(text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 10))
     opcion=int(v.get())
     
     if opcion==1:
@@ -182,25 +210,28 @@ def ShowChoice():
       algoritmoHRRN()
     
     contador+=1
-    label_nom.config(text="Nombre: "+ str(listaRunning[0].nombre), font=('Times', 12))
-    label_llegada.config(text="Tiempo de llegada: "+ str(listaRunning[0].llegada), font=('Times', 12))
-    label_pag.config(text="Paginas: "+ str(listaRunning[0].paginas), font=('Times', 12))
-    label_tEjec.config(text="Tiempo estimado de ejecución: "+ str(listaRunning[0].tEjec), font=('Times', 12))
-    label_cpuA.config(text="CPU Asignado: "+ str(listaRunning[0].cpuAsignado), font=('Times', 12))
-    label_cpuR.config(text="CPU Restante: "+ str(listaRunning[0].cpuRestante), font=('Times', 12))
-    label_en.config(text="Envejecimiento: "+ str(listaRunning[0].Envejecimiento), font=('Times', 12))
-    label_q.config(text="Quantum Restante: "+ str(listaRunning[0].quantum), font=('Times', 12))
-
+    label_nom.config(text="Nombre: "+ str(listaRunning[0].nombre), font=('Times', 10))
+    label_llegada.config(text="Tiempo de llegada: "+ str(listaRunning[0].llegada), font=('Times', 10))
+    label_pag.config(text="Paginas: "+ str(listaRunning[0].paginas), font=('Times', 10))
+    label_tEjec.config(text="Tiempo estimado de ejecución: "+ str(listaRunning[0].tEjec), font=('Times', 10))
+    label_cpuA.config(text="CPU Asignado: "+ str(listaRunning[0].cpuAsignado), font=('Times', 10))
+    label_cpuR.config(text="CPU Restante: "+ str(listaRunning[0].cpuRestante), font=('Times', 10))
+    label_en.config(text="Envejecimiento: "+ str(listaRunning[0].Envejecimiento), font=('Times', 10))
+    label_q.config(text="Quantum Restante: "+ str(listaRunning[0].quantum), font=('Times', 10))
+    
     if contador%5 == 0 and listaBlocked:
       listaBlocked[0].estado=3
       listaReady.append(listaBlocked[0])
       listaBlocked.pop()
     Lbready.delete(0, END)
     Lbrun.delete(0, END)
+    
     for process in listaReady:
       Lbready.insert(END, process.nombre)
+    
     for process in listaRunning:
       Lbrun.insert(END, process.nombre)
+  
   except IndexError:
     pass
   Lbfin.delete(0,END)
@@ -215,7 +246,8 @@ def ShowChoice():
   LbB.delete(0,END)
   for process in listaBlocked:
     LbB.insert(END, process.nombre)
-  
+
+
 
 def ShowCPU():
   opcion=int(x.get())
@@ -227,6 +259,8 @@ def checarFinProceso():
     if listaRunning[0].cpuRestante > 0:
       return True       
 
+
+# ****** Algoritmos Scheduling ******
 # FIFO
 def algoritmoFIFO():
     global listaReady
@@ -235,6 +269,7 @@ def algoritmoFIFO():
     global Lbready
     global Lbrun
     global Lbfin
+    global label_page
     
     try:
       if not listaRunning:                        # Si la lista de Running esta vacia, agrega primer
@@ -259,6 +294,10 @@ def algoritmoFIFO():
       Lbready.insert(process.nombre)
     for process in listaRunning:
       Lbrun.insert(process.nombre)
+    pText="Page r llegada ultAccess accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+      pText+=str(listaRunning[0].listaPags[i][0])+"    "+ str(listaRunning[0].listaPags[i][1])+"    "+str(listaRunning[0].listaPags[i][2])+"         "+str(listaRunning[0].listaPags[i][3])+"          "+str(listaRunning[0].listaPags[i][4])+"          "+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pText)
 
 
 # Round Robin
@@ -269,19 +308,23 @@ def algoritmoRoundRobin():
     global Lbready
     global Lbrun
     global Lbfin
-    
+    global label_page
+    global e4
     if not listaReady:
         return
-    
     if not listaRunning or listaRunning[0].quantum == 0:    # Si la lista de Running esta vacia, agrega primer
         if listaRunning:                                    # proceso de Ready y lo quita de la lista, si no esta vacia
             listaRunning[0].quantum = 0                     # y se acabo el quantum del proceso actual, se resetea a 4,
             agregarRunningReady() 
             #algoritmoRoundRobin()                           # se envia el proceso a Ready y se agrega el siguiente
-        listaRunning.append(listaReady[0])   
-        listaRunning[0].quantum = 5
+        listaRunning.append(listaReady[0])
+        if e4.get():
+          listaRunning[0].quantum= int(e4.get())+1
+        else:
+          listaRunning[0].quantum = 5
         listaReady.pop(0)                      
         algoritmoRoundRobin()
+
     
     if listaRunning[0].quantum > 1 and checarFinProceso(): # Si el quantum es mayor a 0 o el proceso no ha terminado 
         listaRunning[0].quantum -= 1                          # se le resta 1
@@ -293,7 +336,6 @@ def algoritmoRoundRobin():
         else:
             listaRunning[0].quantum = 0
             agregarRunningReady()
-
     #Checa las cosas en la interfaz gráfica
     Lbready.delete(0,END)
     Lbrun.delete(0,END)
@@ -310,6 +352,7 @@ def algoritmoSRT():
     global Lbready
     global Lbrun
     global Lbfin
+    global label_page
     
     try:
       if listaRunning:
@@ -341,6 +384,10 @@ def algoritmoSRT():
     
     except IndexError:
       pass
+    pText="Page r llegada ultAccess accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+      pText+=str(listaRunning[0].listaPags[i][0])+"    "+ str(listaRunning[0].listaPags[i][1])+"    "+str(listaRunning[0].listaPags[i][2])+"         "+str(listaRunning[0].listaPags[i][3])+"          "+str(listaRunning[0].listaPags[i][4])+"          "+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pText)
 
 # Metodo de HRRN Apropiativo
 def algoritmoHRRN():
@@ -349,6 +396,7 @@ def algoritmoHRRN():
     global Lbready
     global Lbrun
     global Lbfin
+    global label_page
     
     try:
       if listaRunning:
@@ -363,13 +411,16 @@ def algoritmoHRRN():
             if prioridadProceso > prioridadTemp:
                 prioridadTemp = prioridadProceso
                 procesoTemp = proceso
+        
         listaReady.remove(procesoTemp)                          # Pone el proceso con mas prioridad al inicio de Ready
         listaReady.insert(0, procesoTemp)
         listaRunning.append(listaReady[0])                      # Agrega proceso a Running
         listaReady.pop(0)
-         #Checa las cosas en la interfaz gráfica
+      
+      #Checa las cosas en la interfaz gráfica
       Lbready.delete(0,END)
       Lbrun.delete(0,END)
+      
       for process in listaReady:
           Lbready.insert(process.nombre)
       for process in listaRunning:
@@ -377,16 +428,32 @@ def algoritmoHRRN():
     
     except IndexError:
       pass
+    
+    pText="Page r llegada ultAccess accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+      pText+=str(listaRunning[0].listaPags[i][0])+"    "+ str(listaRunning[0].listaPags[i][1])+"    "+str(listaRunning[0].listaPags[i][2])+"         "+str(listaRunning[0].listaPags[i][3])+"          "+str(listaRunning[0].listaPags[i][4])+"          "+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pText)
 
 def execTime():
   global tiempoActual
   global listaRunning
   global listaBlocked
   global contador
+  global label_page
   global label_nom, label_llegada, label_pag, label_tEjec, label_cpuA, label_cpuR, label_en, label_q
+  global tkvar1
+  global popupMenuP
+
+  # Testing
+  print('\n****Testing****\n')
+  for proceso in listaBlocked:
+    print(proceso.printProceso())
+    print('')
+  print('\n****************\n')
+
   try:
     tiempoActual+=1
-    label_TActual.config(text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 12))
+    label_TActual.config(text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 10))
     contador+=1
     
     for process in listaRunning: # agrega 1 a cpu asignado
@@ -415,20 +482,22 @@ def execTime():
     elif opcion==4: #HRRn
       print("HRRN")
       algoritmoHRRN()
-    label_nom.config(text="Nombre: "+ str(listaRunning[0].nombre), font=('Times', 12))
-    label_llegada.config(text="Tiempo de llegada: "+ str(listaRunning[0].llegada), font=('Times', 12))
-    label_pag.config(text="Paginas: "+ str(listaRunning[0].paginas), font=('Times', 12))
-    label_tEjec.config(text="Tiempo estimado de ejecución: "+ str(listaRunning[0].tEjec), font=('Times', 12))
-    label_cpuA.config(text="CPU Asignado: "+ str(listaRunning[0].cpuAsignado), font=('Times', 12))
-    label_cpuR.config(text="CPU Restante: "+ str(listaRunning[0].cpuRestante), font=('Times', 12))
-    label_en.config(text="Envejecimiento: "+ str(listaRunning[0].Envejecimiento), font=('Times', 12))
-    label_q.config(text="Quantum Restante: "+ str(listaRunning[0].quantum), font=('Times', 12))
-
+    
+    label_nom.config(text="Nombre: "+ str(listaRunning[0].nombre), font=('Times', 10))
+    label_llegada.config(text="Tiempo de llegada: "+ str(listaRunning[0].llegada), font=('Times', 10))
+    label_pag.config(text="Paginas: "+ str(listaRunning[0].paginas), font=('Times', 10))
+    label_tEjec.config(text="Tiempo estimado de ejecución: "+ str(listaRunning[0].tEjec), font=('Times', 10))
+    label_cpuA.config(text="CPU Asignado: "+ str(listaRunning[0].cpuAsignado), font=('Times', 10))
+    label_cpuR.config(text="CPU Restante: "+ str(listaRunning[0].cpuRestante), font=('Times', 10))
+    label_en.config(text="Envejecimiento: "+ str(listaRunning[0].Envejecimiento), font=('Times', 10))
+    label_q.config(text="Quantum Restante: "+ str(listaRunning[0].quantum), font=('Times', 10))
+    
     if contador%5 == 0 and listaBlocked:
       listaBlocked[0].estado=3
       listaReady.append(listaBlocked[0])
       listaBlocked.pop()
     Lbready.delete(0,END)
+    
     for process in listaReady:
       Lbready.insert(END, process.nombre)
     Lbrun.delete(0,END)
@@ -449,6 +518,7 @@ def execTime():
   LbB.delete(0,END)
   for process in listaBlocked:
     LbB.insert(END, process.nombre)
+
   
 def refresh():
   #resetea las opciones de las interrupciones
@@ -460,12 +530,13 @@ def refreshCPU():
 
 # Clase proceso para crear cada proceso nuevo introducido al sistema
 class Proceso:
-    def __init__(self, nombre, llegada, paginas, tEjec, estado):
+    def __init__(self, nombre, llegada, paginas, tEjec, estado, listaPags):
         self.nombre = nombre
         self.llegada = llegada
         self.paginas = paginas
         self.tEjec = tEjec
         self.estado = estado
+        self.listaPags = listaPags
         self.quantum = 0
         self.cpuAsignado=0 #lo que ya se
         self.cpuRestante=self.tEjec-self.cpuAsignado
@@ -505,10 +576,21 @@ def lecturaArchivo(nombreArchivo):
         tiempoTotal = int(datosProceso[1])
         estado = int(datosProceso[2])
         numPags = int(f.readline())
-        procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado)
+        listaPags = []
         
+        n = 0
         for pag in range(numPags):
-            f.readline()
+            pags = f.readline().replace(' ','').replace('\n','').split(',')
+            res = int(pags[0])
+            tLlegada = int(pags[1])
+            ultAccess = int(pags[2])
+            numAccess = int(pags[3])
+            bitLectura = int(pags[4])
+            bitEscritura = int(pags[5])
+            page = [n, res, tLlegada, ultAccess, numAccess, bitLectura, bitEscritura]
+            listaPags.append(page)
+            n+=1
+        procesoNuevo = Proceso(i+1, llegada, numPags, tiempoTotal, estado, listaPags)
         listaProcesos.append(procesoNuevo) 
         
         if estado==1:
@@ -544,7 +626,12 @@ def crearProceso(listaReady, tiempoActual):
     
     tiempoTotal = int(e3.get())
     llegada = tiempoActual
-    procesoNuevo = Proceso(nombre, llegada, paginas, tiempoTotal, 3)
+    listaPags = []
+    
+    for i in range(paginas):
+        pag = [i, 0, 0, 0, 0, 0, 0]
+        listaPags.append(pag)
+    procesoNuevo = Proceso(nombre, llegada, paginas, tiempoTotal, 3, listaPags)
     listaProcesos.append(procesoNuevo)
     listaReady.append(procesoNuevo)
     listaNombres.append(nombre)
@@ -569,12 +656,29 @@ window.title("Kernel Project")
 #parte de arriba
 frameTop = tk.Frame( master=window, width=100, height=25, bg="grey")
 frameTop.pack(fill=tk.BOTH, expand=True)
-label_TActual = tk.Label(frameTop, text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 12))
+label_TActual = tk.Label(frameTop, text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 10))
 label_TActual.pack()
-button_next= tk.Button(frameTop, text="Ejecutar", width=3, height=2, font=('Times', 12), command = execTime)
-button_next.pack()
+button_Exec= tk.Button(frameTop, text="Ejecutar", width=5, height=2, font=('Times', 10), command=execTime)
+button_Exec.pack()
+myPages = [] #lista vacia
+'dropdown button'
+tkvar1 = StringVar(frameTop)
+for i in range(len(listaRunning[0].listaPags)):
+  myPages.append(i)
+tkvar1.set('0')
 
-labelI = tk.Label(frameTop, text="Escoja una interrupcion", font=('Times', 14))
+popupMenuP = OptionMenu(frameTop, tkvar1, *myPages)
+Label(frameTop, text="Ejecutar").pack()
+popupMenuP.pack()
+
+def change_dropdown1(*args):
+    print(tkvar1.get())
+    execTime()
+
+      
+tkvar1.trace('w', change_dropdown1)
+
+labelI = tk.Label(frameTop, text="Escoja una interrupcion", font=('Times', 10))
 labelI.pack()
 v = tk.IntVar()
 v.set(None)
@@ -591,11 +695,11 @@ for choice, val in interrupciones:
                    text=choice,
                    padx = 20, 
                    variable=v, 
-                   font=('Times', 12), 
+                   font=('Times', 10), 
                    command=ShowChoice,
                    value=val).pack(anchor=tk.W)
 
-button_refresh= tk.Button(frameTop, text="Refresh", width=5, height=2, font=('Times', 12), command=refresh)
+button_refresh= tk.Button(frameTop, text="Refresh", width=5, height=2, font=('Times', 10), command=refresh)
 button_refresh.pack()
 # segunda parte del gui
 frameCPU = tk.Frame(master=window, width=100, height=100, bg="red")
@@ -607,9 +711,9 @@ def show_entry_fields():#añadir proceso al oprimir botón
     crearProceso(listaReady, tiempoActual)
 
 #fields= "Nombre", "Pags", "Ejec Total"
-tk.Label(frameCPU, text="Nombre", font=('Times', 12)).grid(row=0)
-tk.Label(frameCPU, text="Pags", font=('Times', 12)).grid(row=1)
-tk.Label(frameCPU, text="Ejec total", font=('Times', 12)).grid(row=2)
+tk.Label(frameCPU, text="Nombre", font=('Times', 10)).grid(row=0)
+tk.Label(frameCPU, text="Pags", font=('Times', 10)).grid(row=1)
+tk.Label(frameCPU, text="Ejec total", font=('Times', 10)).grid(row=2)
 
 e1 = tk.Entry(frameCPU) #Nombre de proceso
 e2 = tk.Entry(frameCPU) #Num de pags
@@ -619,12 +723,12 @@ e1.grid(row=0, column=1)
 e2.grid(row=1, column=1)
 e3.grid(row=2, column=1)
 
-tk.Button(frameCPU,text='Add', font=('Times', 12), command=show_entry_fields).grid(row=3, column=1, sticky=tk.W, pady=4)
+tk.Button(frameCPU,text='Add', font=('Times', 10), command=show_entry_fields).grid(row=3, column=1, sticky=tk.W, pady=4)
 #Listas
-label_ready=tk.Label(frameCPU, text="Ready", font=('Times', 12)).grid(row=4)
-label_run=tk.Label(frameCPU, text="Running", font=('Times', 12)).grid(row=4, column=1)
-label_fin=tk.Label(frameCPU, text="Finished", font=('Times', 12)).grid(row=4, column=2)
-label_B=tk.Label(frameCPU, text="Blocked", font=('Times', 12)).grid(row=4, column=3)
+label_ready=tk.Label(frameCPU, text="Ready", font=('Times', 10)).grid(row=4)
+label_run=tk.Label(frameCPU, text="Running", font=('Times', 10)).grid(row=4, column=1)
+label_fin=tk.Label(frameCPU, text="Finished", font=('Times', 10)).grid(row=4, column=2)
+label_B=tk.Label(frameCPU, text="Blocked", font=('Times', 10)).grid(row=4, column=3)
 
 Lbready = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 12))
 Lbrun = tk.Listbox(frameCPU,  bd=1, height=3, font=('Times', 12))
@@ -660,10 +764,10 @@ print_lists()
 #tercera parte del gui "Schedule"
 frameSchedule = tk.Frame(master=window, width=100, height=50, bg="yellow")
 frameSchedule.pack(fill=tk.BOTH, expand=True)
-label_schedule=tk.Label(frameSchedule, text="Scheduling", font=('Times', 12))
+label_schedule=tk.Label(frameSchedule, text="Scheduling", font=('Times', 10))
 label_schedule.pack()
 
-labelC = tk.Label(frameSchedule, text="CPU", font=('Times', 14))
+labelC = tk.Label(frameSchedule, text="CPU", font=('Times', 10))
 labelC.pack()
 x = tk.IntVar()
 x.set(1)
@@ -674,43 +778,72 @@ opcionesCPU = [("FIFO", 1),
 
 #Mostrar las opciones---------------------------------------------------
 for opciones, val in opcionesCPU: #opciones de scheduling, comand = ShowCPU
-  tk.Radiobutton(frameSchedule, 
-                   text=opciones,
-                   padx = 20, 
-                   variable=x,
-                   font=('Times', 12), 
-                   command=ShowCPU,
-                   value=val).pack(anchor=tk.W)
+  tk.Radiobutton(frameSchedule, text=opciones, padx = 20, variable=x, font=('Times', 10), command=ShowCPU, value=val).pack(anchor=tk.W, side=tk.LEFT)
 
 
     #Mostrar proceso en estado de running
-label_nom=tk.Label(frameSchedule, text="Nombre: "+str(listaRunning[0].nombre), font=('Times', 12))
+label_nom=tk.Label(frameSchedule, text="Nombre: "+str(listaRunning[0].nombre), font=('Times', 10))
 label_nom.pack()
-label_llegada=tk.Label(frameSchedule, text="Tiempo de llegada: "+str(listaRunning[0].llegada), font=('Times', 12))
+label_llegada=tk.Label(frameSchedule, text="Tiempo de llegada: "+str(listaRunning[0].llegada), font=('Times', 10))
 label_llegada.pack()
-label_pag=tk.Label(frameSchedule, text="Paginas: "+str(listaRunning[0].paginas), font=('Times', 12))
+label_pag=tk.Label(frameSchedule, text="Paginas: "+str(listaRunning[0].paginas), font=('Times', 10))
 label_pag.pack()
-label_tEjec=tk.Label(frameSchedule, text="Tiempo estimado de Ejecución: "+str(listaRunning[0].tEjec), font=('Times', 12))
+label_tEjec=tk.Label(frameSchedule, text="Tiempo estimado de Ejecución: "+str(listaRunning[0].tEjec), font=('Times', 10))
 label_tEjec.pack()
-label_cpuA=tk.Label(frameSchedule, text="CPU asignado: "+str(listaRunning[0].cpuAsignado), font=('Times', 12))
+label_cpuA=tk.Label(frameSchedule, text="CPU asignado: "+str(listaRunning[0].cpuAsignado), font=('Times', 10))
 label_cpuA.pack()
-label_cpuR=tk.Label(frameSchedule, text="CPU Restante: "+str(listaRunning[0].cpuRestante), font=('Times', 12))
+label_cpuR=tk.Label(frameSchedule, text="CPU Restante: "+str(listaRunning[0].cpuRestante), font=('Times', 10))
 label_cpuR.pack()
-label_en=tk.Label(frameSchedule, text="Envejecimiento: "+str(listaRunning[0].Envejecimiento), font=('Times', 12))
+label_en=tk.Label(frameSchedule, text="Envejecimiento: "+str(listaRunning[0].Envejecimiento), font=('Times', 10))
 label_en.pack()
-label_q=tk.Label(frameSchedule, text="Quantum Restante: "+str(listaRunning[0].quantum), font=('Times', 12))
+label_q=tk.Label(frameSchedule, text="Quantum Restante: "+str(listaRunning[0].quantum), font=('Times', 10))
 label_q.pack()
-quantumRequest=tk.Label(frameSchedule, text="Quantum", font=('Times', 12))
+quantumRequest=tk.Label(frameSchedule, text="Quantum", font=('Times', 10))
 e4=tk.Entry()
-e4.pack()
+
 quantumRequest.pack()
+e4.pack()
 def showQ():
   if e4.get():
     numQ=int(e4.get())
-button_addQ= tk.Button(frameSchedule, text="Add", width=5, height=2, font=('Times', 12), command=showQ)
+button_addQ= tk.Button(frameSchedule, text="Add", width=5, height=2, font=('Times', 10), command=showQ)
 button_addQ.pack()
 
 frameMemory = tk.Frame(master=window, width=100, height=50, bg="blue")
 frameMemory.pack(side="bottom", fill=tk.BOTH, expand=True)
+
+'dropdown button'
+tkvar = StringVar(frameMemory)
+choices = { 'FIFO', 'LRU', 'LFU', 'NUR'}
+tkvar.set('FIFO')
+
+popupMenu = OptionMenu(frameMemory, tkvar, *choices)
+Label(frameMemory, text="Memoria").pack()
+popupMenu.pack()
+
+def change_dropdown(*args):
+    if tkvar.get()=='FIFO':
+      print("FIFOM")
+    if tkvar.get()=='LRU':
+      print("LRUM")
+    if tkvar.get()=='LFU':
+      print("LFUM")
+    if tkvar.get()=='NUR':
+      print("NURM")
+    
+      
+tkvar.trace('w', change_dropdown)
+
+buttonReset= tk.Button(frameMemory, text="Reset bit NUR", width=10, height=3, font=('Times', 10), command = execTime)
+buttonReset.pack()
+
+label_page=tk.Label(frameMemory,text="", font=('Times', 10))
+label_page.pack()
+
+pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+
+for i in range(len(listaRunning[0].listaPags)):
+  pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+  label_page.config(text=pagesText)
 
 window.mainloop()  
