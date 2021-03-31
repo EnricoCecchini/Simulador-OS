@@ -7,7 +7,7 @@ Declaramos que hemos realizado esta actividad con integridad academica
 
 '''
 Notas:
-No se pasa primer proceso de blocked a Ready, y se duplican nombres cuando se pasan
+No se pasa primer proceso de blocked a Ready, y se duplican nombres cuando se pasan. Checar otra vez, ya se realizaron cambios
 '''
 
 import tkinter as tk
@@ -23,6 +23,7 @@ def agregarFinished():
     global listaReady
     global Lbrun
     global Lbfin
+    global Lbready
     global label_page
 
     
@@ -31,10 +32,6 @@ def agregarFinished():
         listaRunning[0].estado = 4
         listaFinished.append(listaRunning[0])
         #listaRunning.pop()
-        
-        for process in listaRunning:
-          Lbfin.insert(END, process.nombre)
-          Lbrun.delete(0,END)
         listaRunning.pop()
       else:
         listaRunning[0].estado = 4
@@ -45,9 +42,21 @@ def agregarFinished():
         listaRunning.pop()
     except IndexError:
       pass
+    Lbrun.delete(0,END)
+    for process in listaRunning:
+      Lbrun.insert(END, process.nombre)
+    Lbready.delete(0,END)
+    for process in listaReady:
+      Lbready.insert(END, process.nombre)
     Lbfin.delete(0,END)
     for process in listaFinished:
       Lbfin.insert(END, process.nombre)
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
+    
+
     
 
     
@@ -68,10 +77,12 @@ def agregarBlocked():
     Lbrun.delete(0,END)
     listaRunning.pop(0)
     LbB.delete(0,END)
-    i=1
     for process in listaBlocked:
-      LbB.insert(i, process.nombre)
-      i=i+1
+      LbB.insert(END, process.nombre)
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
 
 
 
@@ -89,7 +100,13 @@ def agregarRunningReady():
     listaReady.append(listaRunning[0])
     Lbready.insert(END, listaRunning[0].nombre)
     Lbrun.delete(0, END)
+    for process in listaRunning:
+      Lbrun.insert(END, process.nombre)
     listaRunning.pop(0)
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
 
 
 # Metodo para agregar procesos de Blocked a Ready
@@ -97,21 +114,26 @@ def agregarBlockedReady():
     global listaBlocked
     global listaReady
     global Lbready
+    global LbB
     global label_page
     global tkvar1
     global popupMenuP
 
-    procesoTemp = listaBlocked[0]
-    procesoTemp.estado = 3
-    listaReady.append(procesoTemp)
-    nom=procesoTemp.nombre
+    listaBlocked[0].estado = 3
+    listaReady.append(listaBlocked[0])
+    nom=listaBlocked[0].nombre
     Lbready.insert(END,nom)
     listaBlocked.pop(0)
     LbB.delete(0,END)
-    i=1
     for process in listaBlocked:
-      LbB.insert(i, process.nombre)
-      i=i+1
+      LbB.insert(END, process.nombre)
+    Lbready.delete(0,END)
+    for process in listaReady:
+      Lbready.insert(END, process.nombre)
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
 
 
 # Metodo para agregar procesos de Ready a Running
@@ -129,10 +151,18 @@ def agregarReady():
           listaRunning.append(listaReady[0])
           nom=listaReady[0].nombre
           listaReady.pop(0)
-          Lbready.delete(0)
-          Lbrun.insert(END, nom)
+          Lbready.delete(0,END)
+          for process in listaReady:
+            Lbready.insert(END, process.nombre)
+          Lbrun.delete(0,END)
+          for process in listaRunning:
+            Lbrun.insert(END, process.nombre)
     except IndexError:
       pass
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
 
     
 
@@ -246,6 +276,10 @@ def ShowChoice():
   LbB.delete(0,END)
   for process in listaBlocked:
     LbB.insert(END, process.nombre)
+  pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+  for i in range(len(listaRunning[0].listaPags)):
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+  label_page.config(text=pagesText)
 
 
 
@@ -294,10 +328,10 @@ def algoritmoFIFO():
       Lbready.insert(process.nombre)
     for process in listaRunning:
       Lbrun.insert(process.nombre)
-    pText="Page r llegada ultAccess accessos NUR\n"
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
     for i in range(len(listaRunning[0].listaPags)):
-      pText+=str(listaRunning[0].listaPags[i][0])+"    "+ str(listaRunning[0].listaPags[i][1])+"    "+str(listaRunning[0].listaPags[i][2])+"         "+str(listaRunning[0].listaPags[i][3])+"          "+str(listaRunning[0].listaPags[i][4])+"          "+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-    label_page.config(text=pText)
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
 
 
 # Round Robin
@@ -343,6 +377,10 @@ def algoritmoRoundRobin():
       Lbready.insert(process.nombre)
     for process in listaRunning:
       Lbrun.insert(process.nombre)
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
 
 
 # Metodo de SRT Apropiativo
@@ -384,10 +422,10 @@ def algoritmoSRT():
     
     except IndexError:
       pass
-    pText="Page r llegada ultAccess accessos NUR\n"
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
     for i in range(len(listaRunning[0].listaPags)):
-      pText+=str(listaRunning[0].listaPags[i][0])+"    "+ str(listaRunning[0].listaPags[i][1])+"    "+str(listaRunning[0].listaPags[i][2])+"         "+str(listaRunning[0].listaPags[i][3])+"          "+str(listaRunning[0].listaPags[i][4])+"          "+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-    label_page.config(text=pText)
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
 
 # Metodo de HRRN Apropiativo
 def algoritmoHRRN():
@@ -428,11 +466,10 @@ def algoritmoHRRN():
     
     except IndexError:
       pass
-    
-    pText="Page r llegada ultAccess accessos NUR\n"
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
     for i in range(len(listaRunning[0].listaPags)):
-      pText+=str(listaRunning[0].listaPags[i][0])+"    "+ str(listaRunning[0].listaPags[i][1])+"    "+str(listaRunning[0].listaPags[i][2])+"         "+str(listaRunning[0].listaPags[i][3])+"          "+str(listaRunning[0].listaPags[i][4])+"          "+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-    label_page.config(text=pText)
+      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
 
 def execTime():
   global tiempoActual
@@ -459,6 +496,13 @@ def execTime():
     for process in listaRunning: # agrega 1 a cpu asignado
       process.cpuAsignado+=1
       process.cpuRestante-=1
+
+      for i in len(process.listaPags):
+        if process.listaPags[i][1] == 1:
+          if process.listaPags[i][4] < 5:
+            process.listaPags[i][4] += 1
+          else:
+            process.listaPags[i][6] = 1
     
     for process in listaReady:#Actualiza los datos de la lista de ready
       process.Envejecimiento=tiempoActual-process.llegada-process.cpuAsignado
@@ -518,6 +562,12 @@ def execTime():
   LbB.delete(0,END)
   for process in listaBlocked:
     LbB.insert(END, process.nombre)
+  if listaRunning:  
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+    for i in range(len(listaRunning[0].listaPags)):
+        pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+    label_page.config(text=pagesText)
+
 
   
 def refresh():
@@ -660,22 +710,20 @@ label_TActual = tk.Label(frameTop, text="Tiempo Actual: "+ str(tiempoActual), fo
 label_TActual.pack()
 button_Exec= tk.Button(frameTop, text="Ejecutar", width=5, height=2, font=('Times', 10), command=execTime)
 button_Exec.pack()
+
 myPages = [] #lista vacia
 'dropdown button'
 tkvar1 = StringVar(frameTop)
 for i in range(len(listaRunning[0].listaPags)):
   myPages.append(i)
-tkvar1.set('0')
+tkvar1.set('')
 
 popupMenuP = OptionMenu(frameTop, tkvar1, *myPages)
 Label(frameTop, text="Ejecutar").pack()
 popupMenuP.pack()
-
 def change_dropdown1(*args):
     print(tkvar1.get())
-    execTime()
-
-      
+    execTime()      
 tkvar1.trace('w', change_dropdown1)
 
 labelI = tk.Label(frameTop, text="Escoja una interrupcion", font=('Times', 10))
@@ -844,6 +892,6 @@ pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
 
 for i in range(len(listaRunning[0].listaPags)):
   pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-  label_page.config(text=pagesText)
+label_page.config(text=pagesText)
 
 window.mainloop()  
