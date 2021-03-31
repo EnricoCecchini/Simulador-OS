@@ -15,168 +15,20 @@ from tkinter import *
 from tkinter import messagebox
 contador=0
 
+
 # ************* Algoritmos de Paginacion *************
-# Metodo para resetear valores de NUR
 def resetNur():
     global listaRunning
 
     for i in range(len(listaRunning[0].listaPags)):
         listaRunning[0].listaPags[i][5] = 0
         listaRunning[0].listaPags[i][6] = 0
-    
-    Lbfin.delete(0,END)
-    for process in listaFinished:
-      Lbfin.insert(END, process.nombre)
-    Lbready.delete(0, END)
-    Lbrun.delete(0, END)
-    for process in listaReady:
-      Lbready.insert(END, process.nombre)
-    for process in listaRunning:
-      Lbrun.insert(END, process.nombre)
-    LbB.delete(0,END)
-    for process in listaBlocked:
-      LbB.insert(END, process.nombre)
-    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
-    for i in range(len(listaRunning[0].listaPags)):
-        pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-    label_page.config(text=pagesText)
-
-# Algoritmo de Paginacion FIFO
-def pagFIFO():
-    global limitePags
-    global listaRunning
-
-    tiempoTempNuevo = listaRunning[0].listaPags[0][2]
-    tiempoTempViejo = listaRunning[0].listaPags[0][2]
-    indexNuevo = 0
-    indexViejo = 0
-    pagsAct = 0
-
-    # Se iteran las paginas para encontrar la primera en llegar no activada y la mas vieja activada
-    for i in range(len(listaRunning[0].listaPags)):
-        if tiempoTempNuevo > listaRunning[0].listaPags[i][2] and listaRunning[0].listaPags[i][1] == 0:
-            indexNuevo = i
-            tiempoTempNuevo = listaRunning[0].listaPags[i][2]
-        
-        if tiempoTempViejo < listaRunning[0].listaPags[i][2] and listaRunning[0].listaPags[i][1] == 1:
-            indexViejo = i
-            tiempoTempViejo = listaRunning[0].listaPags[i][2]
-
-        if listaRunning[0].listaPags[i][1] == 1:
-            pagsAct += 1
-    
-    # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
-    if pagsAct < limitePags:
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-
-    # Si no, se apaga la pagina vieja y activa la nueva
-    else:
-        listaRunning[0].listaPags[indexViejo][1] = 0
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-        
-
-# Algoritmo de Paginacion LRU
-def pagLRU():
-    global limitePags
-    global listaRunning
-
-    accesoTempNuevo = listaRunning[0].listaPags[0][3]
-    accesoTempViejo = listaRunning[0].listaPags[0][3]
-    indexNuevo = 0
-    indexViejo = 0
-    pagsAct = 0
-
-    # Se iteran las paginas para encontrar la pagina con mas tiempo sin accesar y la mas recientemente accesada
-    for i in range(len(listaRunning[0].listaPags)):
-        if accesoTempNuevo > listaRunning[0].listaPags[i][3] and listaRunning[0].listaPags[i][1] == 0:
-            indexNuevo = i
-            accesoTempNuevo = listaRunning[0].listaPags[i][3]
-        
-        if accesoTempViejo < listaRunning[0].listaPags[i][3] and listaRunning[0].listaPags[i][1] == 1:
-            indexViejo = i
-            accesoTempViejo = listaRunning[0].listaPags[i][3]
-
-        if listaRunning[0].listaPags[i][1] == 1:
-            pagsAct += 1
-    
-    # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
-    if pagsAct < limitePags:
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-
-    # Si no, se apaga la pagina vieja y activa la nueva
-    else:
-        listaRunning[0].listaPags[indexViejo][1] = 0
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-
-# Algoritmo de Paginacion LFU
-def pagLFU():
-    global limitePags
-    global listaRunning
-
-    nAccesosTempNuevo = listaRunning[0].listaPags[0][3]
-    nAccesosTempViejo = listaRunning[0].listaPags[0][3]
-    indexNuevo = 0
-    indexViejo = 0
-    pagsAct = 0
-
-    # Se iteran las paginas para encontrar la pagina con mas tiempo sin accesar y la mas recientemente accesada
-    for i in range(len(listaRunning[0].listaPags)):
-        if nAccesosTempNuevo > listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 0:
-            indexNuevo = i
-            nAccesosTempNuevo = listaRunning[0].listaPags[i][4]
-        
-        if nAccesosTempViejo < listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 1:
-            indexViejo = i
-            nAccesosTempViejo = listaRunning[0].listaPags[i][4]
-
-        if listaRunning[0].listaPags[i][1] == 1:
-            pagsAct += 1
-    
-    # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
-    if pagsAct < limitePags:
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-
-    # Si no, se apaga la pagina vieja y activa la nueva
-    else:
-        listaRunning[0].listaPags[indexViejo][1] = 0
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-
-def pagNUR():
-    global limitePags
-    global listaRunning
-    
-    prioridad0 = []
-    prioridad1 = []
-    prioridad2 = []
-    prioridad3 = []
-
-    pagAct = 0
-    for i in range(len(listaRunning[0].listaPags)):
-        if listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
-            prioridad0.append(i)
-        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
-            prioridad1.append(i)
-        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 1:
-            prioridad2.append(i)
-        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
-            prioridad3.append(i)
-        
-        if listaRunning[0].listaPags[i][1] == 1:
-            pagAct+=1
-
-    prioridad0.append(prioridad1).append(prioridad2).append.prioridad3()
-
-    if pagAct < limitePags:
-        listaRunning[0].listaPags[prioridad0[0]][1] = 1
-    
-    else:
-        listaRunning[0].listaPags[prioridad0[-1]][1] = 0
-        listaRunning[0].listaPags[prioridad0[0]][1] = 0
 
 
-# ************* Algoritmos de Scheduling *************
+
+# ************* Algoritmos Para Enviar Procesos a Lista Correcta *************
 # Metodo para agregar procesos a Finished
-def agregarFinished():                                
+def agregarFinished():                         
     global listaRunning
     #global listaProcesos
     global listaFinished
@@ -186,7 +38,6 @@ def agregarFinished():
     global Lbready
     global label_page
 
-    
     try:
       if listaRunning[0].cpuRestante == 0:
         listaRunning[0].estado = 4
@@ -216,6 +67,8 @@ def agregarFinished():
       pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
     label_page.config(text=pagesText)
     
+
+
 # Metodo para agregar procesos de Running a Blocked
 def agregarBlocked():
     global listaRunning
@@ -224,8 +77,6 @@ def agregarBlocked():
     global Lbrun
     global lbB
     global label_page
-    global tkvar1
-    global popupMenuP
     listaRunning[0].estado = 2
     listaBlocked.append(listaRunning[0])
     Lbrun.delete(0,END)
@@ -247,8 +98,6 @@ def agregarRunningReady():
     global Lbrun
     global Lbready
     global label_page
-    global tkvar1
-    global popupMenuP
   
     listaRunning[0].estado = 3
     listaReady.append(listaRunning[0])
@@ -270,8 +119,6 @@ def agregarBlockedReady():
     global Lbready
     global LbB
     global label_page
-    global tkvar1
-    global popupMenuP
 
     listaBlocked[0].estado = 3
     listaReady.append(listaBlocked[0])
@@ -297,8 +144,6 @@ def agregarReady():
     global Lbready
     global Lbrun
     global label_page
-    global tkvar1
-    global popupMenuP
     
     try:
       if not listaRunning:
@@ -331,8 +176,6 @@ def ShowChoice():
   global Lbfin
   global lbB
   global label_nom, label_llegada, label_pag, label_tEjec, label_cpuA, label_cpuR, label_en, label_q
-  global popupMenuP 
-  global tkvar1 
   
   try:
     tiempoActual+=1
@@ -430,10 +273,7 @@ def ShowChoice():
   LbB.delete(0,END)
   for process in listaBlocked:
     LbB.insert(END, process.nombre)
-  pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
-  for i in range(len(listaRunning[0].listaPags)):
-      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-  label_page.config(text=pagesText)
+
 
 
 
@@ -448,7 +288,7 @@ def checarFinProceso():
       return True       
 
 
-# ****** Algoritmos Scheduling ******
+# ****** Algoritmos de Scheduling ******
 # FIFO
 def algoritmoFIFO():
     global listaReady
@@ -551,8 +391,8 @@ def algoritmoSRT():
         if not checarFinProceso():
           agregarFinished()
           algoritmoSRT()
-        else:  
-          agregarRunningReady()                                   # Quita proceso que se esta ejecutando y lo agrega a Ready
+        #else:  
+          #agregarRunningReady()                                   # Quita proceso que se esta ejecutando y lo agrega a Ready
       else:
         procesoTemp = listaReady[0]
         
@@ -576,6 +416,13 @@ def algoritmoSRT():
     
     except IndexError:
       pass
+    #Checa las cosas en la interfaz gráfica
+    Lbready.delete(0,END)
+    Lbrun.delete(0,END)
+    for process in listaReady:
+      Lbready.insert(process.nombre)
+    for process in listaRunning:
+      Lbrun.insert(process.nombre)
     pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
     for i in range(len(listaRunning[0].listaPags)):
       pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
@@ -632,11 +479,8 @@ def execTime():
   global contador
   global label_page
   global label_nom, label_llegada, label_pag, label_tEjec, label_cpuA, label_cpuR, label_en, label_q
-  global tkvar1
-  global popupMenuP
-
   # Testing
-  print('\n****Testing Lista Blocked****\n')
+  print('\n****Testing****\n')
   for proceso in listaBlocked:
     print(proceso.printProceso())
     print('')
@@ -862,21 +706,76 @@ label_TActual = tk.Label(frameTop, text="Tiempo Actual: "+ str(tiempoActual), fo
 label_TActual.pack()
 button_Exec= tk.Button(frameTop, text="Ejecutar", width=5, height=2, font=('Times', 10), command=execTime)
 button_Exec.pack()
+def ShowChoiceP(): #obtener la página a ejecutar
+  global tiempoActual, contador
+  global listaReady
+  global listaRunning
+  global listaBlocked
+  global listaFinished
+  opcion=int(valor.get())
+  print(len(listaRunning[0].listaPags))
+  if opcion<len(listaRunning[0].listaPags):
+    if (opcion==1 and listaRunning[0].listaPags[0][1]==1):
+      print("pag 0")
+      execTime()
+    elif(opcion==1 and listaRunning[0].listaPags[0][1]==0):
+      print("pag 0 no cargada")
 
-myPages = [] #lista vacia
-'dropdown button'
-tkvar1 = StringVar(frameTop)
-for i in range(len(listaRunning[0].listaPags)):
-  myPages.append(i)
-tkvar1.set('')
+    elif (opcion==2 and listaRunning[0].listaPags[1][1]==1):
+      print("pag 1")
+      execTime()
+    elif (opcion==2 and listaRunning[0].listaPags[1][1]==0):
+      print("pag 1 no cargada")
 
-popupMenuP = OptionMenu(frameTop, tkvar1, *myPages)
-Label(frameTop, text="Ejecutar").pack()
-popupMenuP.pack()
-def change_dropdown1(*args):
-    print(tkvar1.get())
-    execTime()      
-tkvar1.trace('w', change_dropdown1)
+    elif (opcion==3 and listaRunning[0].listaPags[2][1]==1):
+      print("pag 2")
+      execTime()
+    elif (opcion==3 and listaRunning[0].listaPags[2][1]==0):
+      print("pag 2 no cargada")
+    
+    elif (opcion==4 and listaRunning[0].listaPags[3][1]==1):
+      print("pag 3")
+      execTime()
+    elif (opcion==4 and listaRunning[0].listaPags[3][1]==0):
+      print("pag 3 no cargada")
+
+    elif (opcion==5 and listaRunning[0].listaPags[4][1]==1):
+      print("pag 4")
+      execTime()
+    elif (opcion==5 and listaRunning[0].listaPags[4][1]==0):
+      print("pag 4 no cargada")
+
+    elif (opcion==6 and listaRunning[0].listaPags[5][1]==1):
+      print("pag 5")
+      execTime()
+    elif (opcion==6 and listaRunning[0].listaPags[5][1]==0):
+      print("pag 5 no cargada")
+
+    elif (opcion==7 and listaRunning[0].listaPags[6][1]==1):
+      print("pag 6")
+      execTime()
+    elif (opcion==7 and listaRunning[0].listaPags[6][1]==0):
+      print("pag 6 no cargada")
+
+    elif (opcion==8 and listaRunning[0].listaPags[7][1]==1):
+      print("pag 7")
+      execTime()
+    elif (opcion==8 and listaRunning[0].listaPags[7][1]==0):
+      print("pag 7 no cargada")
+
+valor=tk.IntVar()
+valor.set(None)
+myPages = [("0", 1), ("1", 2), ("2", 3), ("3", 4), ("4", 5), ("5", 6), ("6", 7), ("7", 8)]
+for choice, val in myPages:
+  tk.Radiobutton(frameTop, 
+                   text=choice,
+                   padx = 20, 
+                   variable=valor, 
+                   font=('Times', 10), 
+                   command=ShowChoiceP,
+                   value=val).pack(anchor=tk.W)
+
+
 
 labelI = tk.Label(frameTop, text="Escoja una interrupcion", font=('Times', 10))
 labelI.pack()
@@ -899,7 +798,7 @@ for choice, val in interrupciones:
                    command=ShowChoice,
                    value=val).pack(anchor=tk.W)
 
-button_refresh= tk.Button(frameTop, text="Refresh", width=6, height=1, font=('Times', 10), command=refresh)
+button_refresh= tk.Button(frameTop, text="Refresh", width=5, height=2, font=('Times', 10), command=refresh)
 button_refresh.pack()
 # segunda parte del gui
 frameCPU = tk.Frame(master=window, width=100, height=100, bg="red")
@@ -1046,4 +945,4 @@ for i in range(len(listaRunning[0].listaPags)):
   pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
 label_page.config(text=pagesText)
 
-window.mainloop()  
+window.mainloop()   

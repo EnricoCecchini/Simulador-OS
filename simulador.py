@@ -367,10 +367,10 @@ def algoritmoHRRN():
 
     else:
         procesoTemp = listaReady[0]
-        prioridadTemp = (procesoTemp.envejecimiento-procesoTemp.tEjec)/procesoTemp.tEjec
+        prioridadTemp = float(procesoTemp.envejecimiento-procesoTemp.tEjec)/procesoTemp.tEjec
 
         for proceso in listaReady:
-            prioridadProceso = (proceso.envejecimiento-proceso.tEjec)/proceso.tEjec
+            prioridadProceso = float(proceso.envejecimiento-proceso.tEjec)/proceso.tEjec
             
             if prioridadProceso > prioridadTemp:
                 prioridadTemp = prioridadProceso
