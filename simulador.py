@@ -31,12 +31,13 @@ class Proceso:
           print(f'Pagina {nPag}:', pag)
           nPag+=1
         '''
-        if self.estado == 1:
-            print('Paginas:')
-            nPag = 0
-            for pag in self.listaPags:
-                print(f'Pagina {nPag}:', pag)
-                nPag+=1
+    
+    def printPaginas(self):
+        print('Paginas:')
+        nPag = 0
+        for pag in self.listaPags:
+            print(f'Pagina {nPag}:', pag)
+            nPag+=1
         
 
 # ****************** Algoritmos de Paginacion ******************
@@ -53,6 +54,7 @@ def resetNur():
 def pagFIFO():
     global limitePags
     global listaRunning
+    global tiempoActual
 
     tiempoTempNuevo = listaRunning[0].listaPags[0][2]
     tiempoTempViejo = listaRunning[0].listaPags[0][2]
@@ -76,17 +78,21 @@ def pagFIFO():
     # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
     if pagsAct < limitePags:
         listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
         listaRunning[0].listaPags[indexViejo][1] = 0
+        listaRunning[0].listaPags[indexViejo][3] = tiempoActual
         listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
         
 
 # Algoritmo de Paginacion LRU
 def pagLRU():
     global limitePags
     global listaRunning
+    global tiempoActual
 
     accesoTempNuevo = listaRunning[0].listaPags[0][3]
     accesoTempViejo = listaRunning[0].listaPags[0][3]
@@ -110,16 +116,20 @@ def pagLRU():
     # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
     if pagsAct < limitePags:
         listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
         listaRunning[0].listaPags[indexViejo][1] = 0
+        listaRunning[0].listaPags[indexViejo][3] = tiempoActual
         listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
 
 # Algoritmo de Paginacion LFU
 def pagLFU():
     global limitePags
     global listaRunning
+    global tiempoActual
 
     nAccesosTempNuevo = listaRunning[0].listaPags[0][3]
     nAccesosTempViejo = listaRunning[0].listaPags[0][3]
@@ -143,15 +153,19 @@ def pagLFU():
     # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
     if pagsAct < limitePags:
         listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
         listaRunning[0].listaPags[indexViejo][1] = 0
+        listaRunning[0].listaPags[indexViejo][3] = tiempoActual
         listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
 
 def pagNUR():
     global limitePags
     global listaRunning
+    global tiempoActual
     
     prioridadOff0 = []
     prioridadOff1 = []
@@ -193,10 +207,13 @@ def pagNUR():
 
     if pagAct < limitePags:
         listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
+        listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
     
     else:
         listaRunning[0].listaPags[prioridadesAct[-1]][1] = 0
+        listaRunning[0].listaPags[prioridadesAct[-1]][3] = tiempoActual
         listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
+        listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
 
 
 
@@ -204,15 +221,16 @@ def pagNUR():
 def findRunning():
     global listaReady
 
-    procesoTemp = listaReady[0]
+    index = 0
 
-    for proceso in listaReady:
-        if proceso.estado == 1:
-            procesoTemp = proceso
+    for i in range(len(listaReady)):
+        if listaReady[i].estado == 1:
+            procesoTemp = listaReady[i]
+            index = i
             break
     
-    listaReady.remove(procesoTemp)                    # Pone el proceso ejecutandose al inicio de Ready
-    listaReady.insert(0, procesoTemp)
+    listaReady.pop(index)                    # Pone el proceso ejecutandose al inicio de Ready
+    listaRunning.append(procesoTemp)
 
 def agregarFinished():                                # Metodo para checar si ya termino un proceso
     global listaRunning
@@ -338,19 +356,21 @@ def algoritmoSRT():
     global listaReady
 
     if listaRunning:
-        agregarRunningReady()                                   # Quita proceso que se esta ejecutando y lo agrega a Ready
-    
-    procesoTemp = listaReady[0]
+        if not checarFinProceso():
+            agregarFinished()
+            #algoritmoSRT()
+    else:    
+        procesoTemp = listaReady[0]
 
-    for proceso in listaReady:                              # Encuentra proceso que termina mas rapido                         
-        if proceso.cpuRestante < procesoTemp.cpuRestante:
-            procesoTemp = proceso
-    
-    listaReady.remove(procesoTemp)                          # Pone el proceso mas corto al inicio de Ready
-    listaReady.insert(0, procesoTemp)
+        for proceso in listaReady:                              # Encuentra proceso que termina mas rapido                         
+            if proceso.cpuRestante < procesoTemp.cpuRestante:
+                procesoTemp = proceso
+        
+        listaReady.remove(procesoTemp)                          # Pone el proceso mas corto al inicio de Ready
+        listaReady.insert(0, procesoTemp)
 
-    listaRunning.append(listaReady[0])                      # Agrega proceso a Running
-    listaReady.pop(0)
+        listaRunning.append(listaReady[0])                      # Agrega proceso a Running
+        listaReady.pop(0)
 
 # Metodo de HRRN Apropiado
 def algoritmoHRRN():
@@ -367,10 +387,10 @@ def algoritmoHRRN():
 
     else:
         procesoTemp = listaReady[0]
-        prioridadTemp = float(procesoTemp.envejecimiento-procesoTemp.tEjec)/procesoTemp.tEjec
+        prioridadTemp = float(procesoTemp.envejecimiento + procesoTemp.tEjec)/procesoTemp.tEjec
 
         for proceso in listaReady:
-            prioridadProceso = float(proceso.envejecimiento-proceso.tEjec)/proceso.tEjec
+            prioridadProceso = float(proceso.envejecimiento + proceso.tEjec)/proceso.tEjec
             
             if prioridadProceso > prioridadTemp:
                 prioridadTemp = prioridadProceso
@@ -499,27 +519,31 @@ print('\n****************** READY ******************')
 for i, proceso in enumerate(listaReady):
     print(f'********* Proceso {i+1} *********')
     proceso.printProceso()
+    proceso.printPaginas()
     print('\n')
 
 print('\n****************** RUNNING ******************')
 for i, proceso in enumerate(listaRunning):
     print(f'********* Proceso {i+1} *********')
     proceso.printProceso()
+    proceso.printPaginas()
     print('\n')
 
 print('\n****************** Blocked ******************')
 for i, proceso in enumerate(listaBlocked):
     print(f'********* Proceso {i+1} *********')
     proceso.printProceso()
+    proceso.printPaginas()
     print('\n')
 
 print('\n****************** Finished ******************')
 for i, proceso in enumerate(listaFinished):
     print(f'********* Proceso {i+1} *********')
     proceso.printProceso()
+    proceso.printPaginas()
     print('\n')
 
-algoritmoFIFO()
+algoritmoSRT()
 pagNUR()
 
 print('\n\n')
@@ -528,4 +552,5 @@ print('\n****************** RUNNING ******************')
 for i, proceso in enumerate(listaRunning):
     print(f'********* Proceso {i+1} *********')
     proceso.printProceso()
+    proceso.printPaginas()
     print('\n')

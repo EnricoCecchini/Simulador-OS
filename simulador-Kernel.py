@@ -444,9 +444,9 @@ def algoritmoHRRN():
           algoritmoHRRN()
       else:
         procesoTemp = listaReady[0]
-        prioridadTemp = (procesoTemp.Envejecimiento-procesoTemp.tEjec)/procesoTemp.tEjec
+        prioridadTemp = (procesoTemp.Envejecimiento+procesoTemp.tEjec)/procesoTemp.tEjec
         for proceso in listaReady:
-            prioridadProceso = (proceso.Envejecimiento-proceso.tEjec)/proceso.tEjec  
+            prioridadProceso = (proceso.Envejecimiento+proceso.tEjec)/proceso.tEjec  
             if prioridadProceso > prioridadTemp:
                 prioridadTemp = prioridadProceso
                 procesoTemp = proceso
@@ -626,13 +626,13 @@ def lecturaArchivo(nombreArchivo):
         
         n = 0
         for pag in range(numPags):
-            pags = f.readline().replace(' ','').replace('\n','').split(',')
-            res = int(pags[0])
-            tLlegada = int(pags[1])
-            ultAccess = int(pags[2])
-            numAccess = int(pags[3])
-            bitLectura = int(pags[4])
-            bitEscritura = int(pags[5])
+            pagina = f.readline().replace(' ','').replace('\n','').split(',')
+            res = int(pagina[0])
+            tLlegada = int(pagina[1])
+            ultAccess = int(pagina[2])
+            numAccess = int(pagina[3])
+            bitLectura = int(pagina[4])
+            bitEscritura = int(pagina[5])
             page = [n, res, tLlegada, ultAccess, numAccess, bitLectura, bitEscritura]
             listaPags.append(page)
             n+=1
