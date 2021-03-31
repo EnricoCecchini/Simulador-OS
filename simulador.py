@@ -24,6 +24,7 @@ class Proceso:
         print('Edad:', self.envejecimiento)
         print('Quantum Restante:', self.quantum)
 
+        '''
         print('Paginas:')
         nPag = 0
         for pag in self.listaPags:
@@ -36,7 +37,7 @@ class Proceso:
             for pag in self.listaPags:
                 print(f'Pagina {nPag}:', pag)
                 nPag+=1
-        '''
+        
 
 # ****************** Algoritmos de Paginacion ******************
 
@@ -152,33 +153,50 @@ def pagNUR():
     global limitePags
     global listaRunning
     
-    prioridad0 = []
-    prioridad1 = []
-    prioridad2 = []
-    prioridad3 = []
+    prioridadOff0 = []
+    prioridadOff1 = []
+    prioridadOff2 = []
+    prioridadOff3 = []
+
+    prioridadAct0 = []
+    prioridadAct1 = []
+    prioridadAct2 = []
+    prioridadAct3 = []
 
     pagAct = 0
     for i in range(len(listaRunning[0].listaPags)):
         if listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
-            prioridad0.append(i)
+            prioridadOff0.append(i)
         elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
-            prioridad1.append(i)
+            prioridadOff1.append(i)
         elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 1:
-            prioridad2.append(i)
+            prioridadOff2.append(i)
         elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
-            prioridad3.append(i)
+            prioridadOff3.append(i)
+
+        if listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
+            prioridadAct0.append(i)
+        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
+            prioridadAct0.append(i)
+        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 1:
+            prioridadAct2.append(i)
+        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
+            prioridadAct3.append(i)
         
         if listaRunning[0].listaPags[i][1] == 1:
             pagAct+=1
 
-    prioridad0.append(prioridad1).append(prioridad2).append.prioridad3()
+    prioridadesOff = prioridadOff0 + prioridadOff1 + prioridadOff2 + prioridadOff3
+    prioridadesAct = prioridadAct0 + prioridadAct1 + prioridadAct2 + prioridadAct3
+
+    print(prioridadesOff)
 
     if pagAct < limitePags:
-        listaRunning[0].listaPags[prioridad0[0]][1] = 1
+        listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
     
     else:
-        listaRunning[0].listaPags[prioridad0[-1]][1] = 0
-        listaRunning[0].listaPags[prioridad0[0]][1] = 0
+        listaRunning[0].listaPags[prioridadesAct[-1]][1] = 0
+        listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
 
 
 
@@ -473,17 +491,7 @@ lecturaArchivo()
 # TESTING
 #crearProceso()
 
-print('\n****************** READY ******************')
-for i, proceso in enumerate(listaReady):
-    print(f'********* Proceso {i+1} *********')
-    proceso.printProceso()
-    print('\n')
-
 findRunning()
-
-algoritmoFIFO()
-manejoInterrupt(1)
-algoritmoFIFO()
 
 print('\n\n')
 print('-'*30)
@@ -511,8 +519,8 @@ for i, proceso in enumerate(listaFinished):
     proceso.printProceso()
     print('\n')
 
-#algoritmoFIFO()
-pagLRU()
+algoritmoFIFO()
+pagNUR()
 
 print('\n\n')
 print('-'*30)
