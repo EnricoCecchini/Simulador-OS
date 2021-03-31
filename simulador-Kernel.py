@@ -497,7 +497,7 @@ def execTime():
       process.cpuAsignado+=1
       process.cpuRestante-=1
 
-      for i in len(process.listaPags):
+      for i in range(len(process.listaPags):
         if process.listaPags[i][1] == 1:
           if process.listaPags[i][4] < 5:
             process.listaPags[i][4] += 1
