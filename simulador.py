@@ -79,6 +79,7 @@ def pagFIFO():
     if pagsAct < limitePags:
         listaRunning[0].listaPags[indexNuevo][1] = 1
         listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
@@ -86,6 +87,9 @@ def pagFIFO():
         listaRunning[0].listaPags[indexViejo][3] = tiempoActual
         listaRunning[0].listaPags[indexNuevo][1] = 1
         listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
+    
+    agregarBlocked()
         
 
 # Algoritmo de Paginacion LRU
@@ -117,6 +121,7 @@ def pagLRU():
     if pagsAct < limitePags:
         listaRunning[0].listaPags[indexNuevo][1] = 1
         listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
@@ -124,6 +129,9 @@ def pagLRU():
         listaRunning[0].listaPags[indexViejo][3] = tiempoActual
         listaRunning[0].listaPags[indexNuevo][1] = 1
         listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
+    
+    agregarBlocked()
 
 # Algoritmo de Paginacion LFU
 def pagLFU():
@@ -154,6 +162,7 @@ def pagLFU():
     if pagsAct < limitePags:
         listaRunning[0].listaPags[indexNuevo][1] = 1
         listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
@@ -161,6 +170,9 @@ def pagLFU():
         listaRunning[0].listaPags[indexViejo][3] = tiempoActual
         listaRunning[0].listaPags[indexNuevo][1] = 1
         listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
+    
+    agregarBlocked()
 
 def pagNUR():
     global limitePags
@@ -208,12 +220,16 @@ def pagNUR():
     if pagAct < limitePags:
         listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
         listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
+        listaRunning[0].listaPags[prioridadesOff[0]][5] = 1
     
     else:
         listaRunning[0].listaPags[prioridadesAct[-1]][1] = 0
         listaRunning[0].listaPags[prioridadesAct[-1]][3] = tiempoActual
         listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
         listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
+        listaRunning[0].listaPags[prioridadesOff[0]][5] = 1
+    
+    agregarBlocked()
 
 
 
@@ -511,6 +527,8 @@ lecturaArchivo()
 # TESTING
 #crearProceso()
 
+print('\n****************** TESTING SCHEDULING ******************')
+
 findRunning()
 
 print('\n\n')
@@ -543,13 +561,22 @@ for i, proceso in enumerate(listaFinished):
     proceso.printPaginas()
     print('\n')
 
+print('\n****************** TESTING PAGINACION ******************')
+
 algoritmoSRT()
-pagNUR()
+pagLRU()
 
 print('\n\n')
 print('-'*30)
 print('\n****************** RUNNING ******************')
 for i, proceso in enumerate(listaRunning):
+    print(f'********* Proceso {i+1} *********')
+    proceso.printProceso()
+    proceso.printPaginas()
+    print('\n')
+
+print('\n****************** Blocked ******************')
+for i, proceso in enumerate(listaBlocked):
     print(f'********* Proceso {i+1} *********')
     proceso.printProceso()
     proceso.printPaginas()
