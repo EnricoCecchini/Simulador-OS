@@ -15,17 +15,6 @@ from tkinter import *
 from tkinter import messagebox
 contador=0
 
-
-# ************* Algoritmos de Paginacion *************
-def resetNur():
-    global listaRunning
-
-    for i in range(len(listaRunning[0].listaPags)):
-        listaRunning[0].listaPags[i][5] = 0
-        listaRunning[0].listaPags[i][6] = 0
-
-
-
 # ************* Algoritmos Para Enviar Procesos a Lista Correcta *************
 # Metodo para agregar procesos a Finished
 def agregarFinished():                         
@@ -122,6 +111,11 @@ def agregarBlockedReady():
 
     listaBlocked[0].estado = 3
     listaReady.append(listaBlocked[0])
+
+    print('****************** Testing BlockedReady *********************')
+    for i in listaReady:
+      print(i)
+
     nom=listaBlocked[0].nombre
     Lbready.insert(END,nom)
     listaBlocked.pop(0)
@@ -323,9 +317,10 @@ def algoritmoFIFO():
     for process in listaRunning:
       Lbrun.insert(process.nombre)
     pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
-    for i in range(len(listaRunning[0].listaPags)):
-      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-    label_page.config(text=pagesText)
+    if listaRunning:
+      for i in range(len(listaRunning[0].listaPags)):
+            pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+      label_page.config(text=pagesText)
 
 
 # Round Robin
@@ -372,9 +367,10 @@ def algoritmoRoundRobin():
     for process in listaRunning:
       Lbrun.insert(process.nombre)
     pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
-    for i in range(len(listaRunning[0].listaPags)):
-      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-    label_page.config(text=pagesText)
+    if listaRunning:
+      for i in range(len(listaRunning[0].listaPags)):
+            pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+      label_page.config(text=pagesText)
 
 
 # Metodo de SRT Apropiativo
@@ -424,9 +420,10 @@ def algoritmoSRT():
     for process in listaRunning:
       Lbrun.insert(process.nombre)
     pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
-    for i in range(len(listaRunning[0].listaPags)):
-      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-    label_page.config(text=pagesText)
+    if listaRunning:
+      for i in range(len(listaRunning[0].listaPags)):
+            pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+      label_page.config(text=pagesText)
 
 # Metodo de HRRN Apropiativo
 def algoritmoHRRN():
@@ -468,9 +465,10 @@ def algoritmoHRRN():
     except IndexError:
       pass
     pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
-    for i in range(len(listaRunning[0].listaPags)):
-      pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
-    label_page.config(text=pagesText)
+    if listaRunning:
+      for i in range(len(listaRunning[0].listaPags)):
+            pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+      label_page.config(text=pagesText)
 
 def execTime():
   global tiempoActual
@@ -484,8 +482,17 @@ def execTime():
   for proceso in listaBlocked:
     print(proceso.printProceso())
     print('')
+  
+  print('Contador:',contador)
   print('\n****************\n')
 
+  print('Test Contador:',contador)
+  try:
+    if  contador > 0 and contador%5 == 0:
+      agregarBlockedReady()
+  except IndexError:
+    pass
+      
   try:
     tiempoActual+=1
     label_TActual.config(text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 10))
@@ -494,14 +501,6 @@ def execTime():
     for process in listaRunning: # agrega 1 a cpu asignado
       process.cpuAsignado+=1
       process.cpuRestante-=1
-
-      if listaRunning:
-        for i in range(len(process.listaPags)):
-          if process.listaPags[i][1] == 1:
-            if process.listaPags[i][4] < 5:
-              process.listaPags[i][4] += 1
-            else:
-              process.listaPags[i][6] = 1
     
     for process in listaReady:#Actualiza los datos de la lista de ready
       process.Envejecimiento=tiempoActual-process.llegada-process.cpuAsignado
@@ -535,8 +534,6 @@ def execTime():
     label_en.config(text="Envejecimiento: "+ str(listaRunning[0].Envejecimiento), font=('Times', 10))
     label_q.config(text="Quantum Restante: "+ str(listaRunning[0].quantum), font=('Times', 10))
     
-    if contador%5 == 0 and listaBlocked:
-      agregarBlockedReady()
     
     for process in listaReady:
       Lbready.insert(END, process.nombre)
@@ -558,10 +555,20 @@ def execTime():
   LbB.delete(0,END)
   for process in listaBlocked:
     LbB.insert(END, process.nombre)
-  if listaRunning:  
-    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+
+  # Aumenta numero de accesos, y cambia bit de escritura si se accesa 5 veces
+    if listaRunning:
+      for i in range(len(listaRunning[0].listaPags)):
+        if listaRunning[0].listaPags[i][1] == 1:
+          if listaRunning[0].listaPags[i][4] == 5:
+            listaRunning[0].listaPags[i][6] = 1
+          listaRunning[0].listaPags[i][5] = 1 
+
+  pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+  
+  if listaRunning:
     for i in range(len(listaRunning[0].listaPags)):
-        pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+          pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
     label_page.config(text=pagesText)
 
 
@@ -573,6 +580,198 @@ def refresh():
 def refreshCPU():
   #resetea las opciones de scheduling
   x.set(1)
+
+# ****************** Algoritmos de Paginacion ******************
+
+# Metodo para resetear valores de NUR
+def resetNur():
+    global listaRunning
+
+    for i in range(len(listaRunning[0].listaPags)):
+        listaRunning[0].listaPags[i][5] = 0
+        listaRunning[0].listaPags[i][6] = 0
+
+# Algoritmo de Paginacion FIFO
+def pagFIFO():
+    global limitePags
+    global listaRunning
+    global tiempoActual
+
+    tiempoTempNuevo = listaRunning[0].listaPags[0][2]
+    tiempoTempViejo = listaRunning[0].listaPags[0][2]
+    indexNuevo = 0
+    indexViejo = 0
+    pagsAct = 0
+
+    # Se iteran las paginas para encontrar la primera en llegar no activada y la mas vieja activada
+    for i in range(len(listaRunning[0].listaPags)):
+        if tiempoTempNuevo > listaRunning[0].listaPags[i][2] and listaRunning[0].listaPags[i][1] == 0:
+            indexNuevo = i
+            tiempoTempNuevo = listaRunning[0].listaPags[i][2]
+        
+        if tiempoTempViejo < listaRunning[0].listaPags[i][2] and listaRunning[0].listaPags[i][1] == 1:
+            indexViejo = i
+            tiempoTempViejo = listaRunning[0].listaPags[i][2]
+
+        if listaRunning[0].listaPags[i][1] == 1:
+            pagsAct += 1
+    
+    # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
+    if pagsAct < limitePags:
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
+
+    # Si no, se apaga la pagina vieja y activa la nueva
+    else:
+        listaRunning[0].listaPags[indexViejo][1] = 0
+        listaRunning[0].listaPags[indexViejo][3] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
+    
+    agregarBlocked()
+        
+
+# Algoritmo de Paginacion LRU
+def pagLRU():
+    global limitePags
+    global listaRunning
+    global tiempoActual
+
+    accesoTempNuevo = listaRunning[0].listaPags[0][3]
+    accesoTempViejo = listaRunning[0].listaPags[0][3]
+    indexNuevo = 0
+    indexViejo = 0
+    pagsAct = 0
+
+    # Se iteran las paginas para encontrar la pagina con mas tiempo sin accesar y la mas recientemente accesada
+    for i in range(len(listaRunning[0].listaPags)):
+        if accesoTempNuevo > listaRunning[0].listaPags[i][3] and listaRunning[0].listaPags[i][1] == 0:
+            indexNuevo = i
+            accesoTempNuevo = listaRunning[0].listaPags[i][3]
+        
+        if accesoTempViejo < listaRunning[0].listaPags[i][3] and listaRunning[0].listaPags[i][1] == 1:
+            indexViejo = i
+            accesoTempViejo = listaRunning[0].listaPags[i][3]
+
+        if listaRunning[0].listaPags[i][1] == 1:
+            pagsAct += 1
+    
+    # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
+    if pagsAct < limitePags:
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
+
+    # Si no, se apaga la pagina vieja y activa la nueva
+    else:
+        listaRunning[0].listaPags[indexViejo][1] = 0
+        listaRunning[0].listaPags[indexViejo][3] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
+    
+    agregarBlocked()
+
+# Algoritmo de Paginacion LFU
+def pagLFU():
+    global limitePags
+    global listaRunning
+    global tiempoActual
+
+    nAccesosTempNuevo = listaRunning[0].listaPags[0][3]
+    nAccesosTempViejo = listaRunning[0].listaPags[0][3]
+    indexNuevo = 0
+    indexViejo = 0
+    pagsAct = 0
+
+    # Se iteran las paginas para encontrar la pagina con mas tiempo sin accesar y la mas recientemente accesada
+    for i in range(len(listaRunning[0].listaPags)):
+        if nAccesosTempNuevo > listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 0:
+            indexNuevo = i
+            nAccesosTempNuevo = listaRunning[0].listaPags[i][4]
+        
+        if nAccesosTempViejo < listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 1:
+            indexViejo = i
+            nAccesosTempViejo = listaRunning[0].listaPags[i][4]
+
+        if listaRunning[0].listaPags[i][1] == 1:
+            pagsAct += 1
+    
+    # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
+    if pagsAct < limitePags:
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
+
+    # Si no, se apaga la pagina vieja y activa la nueva
+    else:
+        listaRunning[0].listaPags[indexViejo][1] = 0
+        listaRunning[0].listaPags[indexViejo][3] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][1] = 1
+        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[indexNuevo][5] = 1
+    
+    agregarBlocked()
+
+def pagNUR():
+    global limitePags
+    global listaRunning
+    global tiempoActual
+    
+    prioridadOff0 = []
+    prioridadOff1 = []
+    prioridadOff2 = []
+    prioridadOff3 = []
+
+    prioridadAct0 = []
+    prioridadAct1 = []
+    prioridadAct2 = []
+    prioridadAct3 = []
+
+    pagAct = 0
+    for i in range(len(listaRunning[0].listaPags)):
+        if listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
+            prioridadOff0.append(i)
+        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
+            prioridadOff1.append(i)
+        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 1:
+            prioridadOff2.append(i)
+        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
+            prioridadOff3.append(i)
+        if listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
+            prioridadAct0.append(i)
+        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
+            prioridadAct0.append(i)
+        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 1:
+            prioridadAct2.append(i)
+        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
+            prioridadAct3.append(i)
+        
+        if listaRunning[0].listaPags[i][1] == 1:
+            pagAct+=1
+
+    prioridadesOff = prioridadOff0 + prioridadOff1 + prioridadOff2 + prioridadOff3
+    prioridadesAct = prioridadAct0 + prioridadAct1 + prioridadAct2 + prioridadAct3
+
+    # Si no se ha llegado al limite de procesos, se enciende el de mayor prioridad
+    if pagAct < limitePags:
+        listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
+        listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
+        listaRunning[0].listaPags[prioridadesOff[0]][5] = 1
+    
+    # Se apaga el proceso de menor prioridad y se activa el de mayor prioridad
+    else:
+        listaRunning[0].listaPags[prioridadesAct[-1]][1] = 0
+        listaRunning[0].listaPags[prioridadesAct[-1]][3] = tiempoActual
+        listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
+        listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
+        listaRunning[0].listaPags[prioridadesOff[0]][5] = 1
+    
+    agregarBlocked()
+
+
 
 # Clase proceso para crear cada proceso nuevo introducido al sistema
 class Proceso:
@@ -694,7 +893,7 @@ listaNombres = []
 listaFinished = []
 
 archivo = input('Nombre de Archivo a leer: ')
-pags, tiempoActual = lecturaArchivo(archivo)
+limitePags, tiempoActual = lecturaArchivo(archivo)
 
 #1-running 2-blocked 3-ready
 window = tk.Tk()
@@ -705,63 +904,155 @@ frameTop.pack(fill=tk.BOTH, expand=True)
 label_TActual = tk.Label(frameTop, text="Tiempo Actual: "+ str(tiempoActual), font=('Times', 10))
 label_TActual.pack()
 button_Exec= tk.Button(frameTop, text="Ejecutar", width=5, height=2, font=('Times', 10), command=execTime)
-button_Exec.pack()
+button_Exec.pack() 
+
 def ShowChoiceP(): #obtener la página a ejecutar
-  global tiempoActual, contador
+  global tiempoActual, contado
   global listaReady
-  global listaRunning
+  global listaRunning 
   global listaBlocked
   global listaFinished
+  global tkvar
   opcion=int(valor.get())
+  métodoPaginacion=tkvar.get()
   print(len(listaRunning[0].listaPags))
   if opcion<len(listaRunning[0].listaPags):
     if (opcion==1 and listaRunning[0].listaPags[0][1]==1):
-      print("pag 0")
-      execTime()
+        print("pag 0")
+        execTime()
     elif(opcion==1 and listaRunning[0].listaPags[0][1]==0):
       print("pag 0 no cargada")
-
+      if tkvar.get()=='FIFO':
+          print("FIFOM")
+          pagFIFO()
+      if tkvar.get()=='LRU':
+          print("LRUM")
+          pagLRU()
+      if tkvar.get()=='LFU':
+          print("LFUM")
+          pagLFU()
+      if tkvar.get()=='NUR':
+          print("NURM")
+          pagNUR()
     elif (opcion==2 and listaRunning[0].listaPags[1][1]==1):
       print("pag 1")
       execTime()
     elif (opcion==2 and listaRunning[0].listaPags[1][1]==0):
       print("pag 1 no cargada")
-
+      if tkvar.get()=='FIFO':
+          print("FIFOM")
+          pagFIFO()
+      if tkvar.get()=='LRU':
+          print("LRUM")
+          pagLRU()
+      if tkvar.get()=='LFU':
+          print("LFUM")
+          pagLFU()
+      if tkvar.get()=='NUR':
+          print("NURM")
+          pagNUR()
     elif (opcion==3 and listaRunning[0].listaPags[2][1]==1):
       print("pag 2")
       execTime()
     elif (opcion==3 and listaRunning[0].listaPags[2][1]==0):
       print("pag 2 no cargada")
-    
+      if tkvar.get()=='FIFO':
+          print("FIFOM")
+          pagFIFO()
+      if tkvar.get()=='LRU':
+          print("LRUM")
+          pagLRU()
+      if tkvar.get()=='LFU':
+          print("LFUM")
+          pagLFU()
+      if tkvar.get()=='NUR':
+          print("NURM")
+          pagNUR()
     elif (opcion==4 and listaRunning[0].listaPags[3][1]==1):
       print("pag 3")
       execTime()
     elif (opcion==4 and listaRunning[0].listaPags[3][1]==0):
       print("pag 3 no cargada")
-
+      if tkvar.get()=='FIFO':
+          print("FIFOM")
+          pagFIFO()
+      if tkvar.get()=='LRU':
+          print("LRUM")
+          pagLRU()
+      if tkvar.get()=='LFU':
+          print("LFUM")
+          pagLFU()
+      if tkvar.get()=='NUR':
+          print("NURM")
+          pagNUR()
     elif (opcion==5 and listaRunning[0].listaPags[4][1]==1):
       print("pag 4")
       execTime()
     elif (opcion==5 and listaRunning[0].listaPags[4][1]==0):
       print("pag 4 no cargada")
-
+      if tkvar.get()=='FIFO':
+          print("FIFOM")
+          pagFIFO()
+      if tkvar.get()=='LRU':
+          print("LRUM")
+          pagLRU()
+      if tkvar.get()=='LFU':
+          print("LFUM")
+          pagLFU()
+      if tkvar.get()=='NUR':
+          print("NURM")
+          pagNUR()
     elif (opcion==6 and listaRunning[0].listaPags[5][1]==1):
       print("pag 5")
       execTime()
     elif (opcion==6 and listaRunning[0].listaPags[5][1]==0):
       print("pag 5 no cargada")
-
+      if tkvar.get()=='FIFO':
+          print("FIFOM")
+          pagFIFO()
+      if tkvar.get()=='LRU':
+          print("LRUM")
+          pagLRU()
+      if tkvar.get()=='LFU':
+          print("LFUM")
+          pagLFU()
+      if tkvar.get()=='NUR':
+          print("NURM")
+          pagNUR()
     elif (opcion==7 and listaRunning[0].listaPags[6][1]==1):
       print("pag 6")
       execTime()
     elif (opcion==7 and listaRunning[0].listaPags[6][1]==0):
       print("pag 6 no cargada")
-
+      if tkvar.get()=='FIFO':
+          print("FIFOM")
+          pagFIFO()
+      if tkvar.get()=='LRU':
+          print("LRUM")
+          pagLRU()
+      if tkvar.get()=='LFU':
+          print("LFUM")
+          pagLFU()
+      if tkvar.get()=='NUR':
+          print("NURM")
+          pagNUR()
     elif (opcion==8 and listaRunning[0].listaPags[7][1]==1):
       print("pag 7")
       execTime()
     elif (opcion==8 and listaRunning[0].listaPags[7][1]==0):
       print("pag 7 no cargada")
+      if tkvar.get()=='FIFO':
+          print("FIFOM")
+          pagFIFO()
+      if tkvar.get()=='LRU':
+          print("LRUM")
+          pagLRU()
+      if tkvar.get()=='LFU':
+          print("LFUM")
+          pagLFU()
+      if tkvar.get()=='NUR':
+          print("NURM")
+          pagNUR()
 
 valor=tk.IntVar()
 valor.set(None)
@@ -933,7 +1224,7 @@ def change_dropdown(*args):
       
 tkvar.trace('w', change_dropdown)
 
-buttonReset= tk.Button(frameMemory, text="Reset bit NUR", width=10, height=3, font=('Times', 10), command = execTime)
+buttonReset= tk.Button(frameMemory, text="Reset bit NUR", width=10, height=3, font=('Times', 10), command = resetNur)
 buttonReset.pack()
 
 label_page=tk.Label(frameMemory,text="", font=('Times', 10))
