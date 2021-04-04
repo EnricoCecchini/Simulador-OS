@@ -5,11 +5,6 @@ Carmen Aurora Monjaras  - 531675  50%
 Declaramos que hemos realizado esta actividad con integridad academica
 '''
 
-'''
-Notas:
-No se pasa primer proceso de blocked a Ready, y se duplican nombres cuando se pasan. Checar otra vez, ya se realizaron cambios
-'''
-
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
@@ -594,10 +589,17 @@ def refreshCPU():
 # Metodo para resetear valores de NUR
 def resetNur():
     global listaRunning
+    global label_page
 
     for i in range(len(listaRunning[0].listaPags)):
         listaRunning[0].listaPags[i][5] = 0
         listaRunning[0].listaPags[i][6] = 0
+    pagesText="Page Residencia Llegada ultAccess Accessos NUR\n"
+  
+    if listaRunning:
+      for i in range(len(listaRunning[0].listaPags)):
+            pagesText+= str(listaRunning[0].listaPags[i][0])+(" "*10)+ str(listaRunning[0].listaPags[i][1])+(" "*10)+str(listaRunning[0].listaPags[i][2])+(" "*10)+str(listaRunning[0].listaPags[i][3])+(" "*10)+str(listaRunning[0].listaPags[i][4])+(" "*11)+str(listaRunning[0].listaPags[i][5])+str(listaRunning[0].listaPags[i][6])+"\n"
+      label_page.config(text=pagesText)
 
 # Algoritmo de Paginacion FIFO
 def pagFIFO(nPag):
