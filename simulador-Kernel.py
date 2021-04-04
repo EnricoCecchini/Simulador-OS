@@ -478,9 +478,17 @@ def execTime():
   global label_page
   global label_nom, label_llegada, label_pag, label_tEjec, label_cpuA, label_cpuR, label_en, label_q
   # Testing
-  print('\n****Testing****\n')
+  
+  print('\n****Testing RUNNING****\n')
+  for proceso in listaRunning:
+    print(proceso.printProceso())
+    proceso.printPaginas()
+    print('')
+
+  print('\n****Testing BLOCKED****\n')
   for proceso in listaBlocked:
     print(proceso.printProceso())
+    proceso.printPaginas()
     print('')
   
   print('Contador:',contador)
@@ -592,7 +600,7 @@ def resetNur():
         listaRunning[0].listaPags[i][6] = 0
 
 # Algoritmo de Paginacion FIFO
-def pagFIFO():
+def pagFIFO(nPag):
     global limitePags
     global listaRunning
     global tiempoActual
@@ -618,23 +626,23 @@ def pagFIFO():
     
     # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
     if pagsAct < limitePags:
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
-        listaRunning[0].listaPags[indexNuevo][5] = 1
+        listaRunning[0].listaPags[nPag][1] = 1
+        #listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[nPag][5] = 1
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
         listaRunning[0].listaPags[indexViejo][1] = 0
         listaRunning[0].listaPags[indexViejo][3] = tiempoActual
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
-        listaRunning[0].listaPags[indexNuevo][5] = 1
+        listaRunning[0].listaPags[nPag][1] = 1
+        #listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[nPag][5] = 1
     
     agregarBlocked()
         
 
 # Algoritmo de Paginacion LRU
-def pagLRU():
+def pagLRU(nPag):
     global limitePags
     global listaRunning
     global tiempoActual
@@ -660,22 +668,22 @@ def pagLRU():
     
     # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
     if pagsAct < limitePags:
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
-        listaRunning[0].listaPags[indexNuevo][5] = 1
+        listaRunning[0].listaPags[nPag][1] = 1
+        #listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[nPag][5] = 1
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
         listaRunning[0].listaPags[indexViejo][1] = 0
         listaRunning[0].listaPags[indexViejo][3] = tiempoActual
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
-        listaRunning[0].listaPags[indexNuevo][5] = 1
+        listaRunning[0].listaPags[nPag][1] = 1
+        #listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[nPag][5] = 1
     
     agregarBlocked()
 
 # Algoritmo de Paginacion LFU
-def pagLFU():
+def pagLFU(nPag):
     global limitePags
     global listaRunning
     global tiempoActual
@@ -701,21 +709,21 @@ def pagLFU():
     
     # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
     if pagsAct < limitePags:
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
-        listaRunning[0].listaPags[indexNuevo][5] = 1
+        listaRunning[0].listaPags[nPag][1] = 1
+        #listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[nPag][5] = 1
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
         listaRunning[0].listaPags[indexViejo][1] = 0
         listaRunning[0].listaPags[indexViejo][3] = tiempoActual
-        listaRunning[0].listaPags[indexNuevo][1] = 1
-        listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
-        listaRunning[0].listaPags[indexNuevo][5] = 1
+        listaRunning[0].listaPags[nPag][1] = 1
+        #listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
+        listaRunning[0].listaPags[nPag][5] = 1
     
     agregarBlocked()
 
-def pagNUR():
+def pagNUR(nPag):
     global limitePags
     global listaRunning
     global tiempoActual
@@ -757,17 +765,17 @@ def pagNUR():
 
     # Si no se ha llegado al limite de procesos, se enciende el de mayor prioridad
     if pagAct < limitePags:
-        listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
-        listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
-        listaRunning[0].listaPags[prioridadesOff[0]][5] = 1
+        listaRunning[0].listaPags[nPag][1] = 1
+        #listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
+        listaRunning[0].listaPags[nPag][5] = 1
     
     # Se apaga el proceso de menor prioridad y se activa el de mayor prioridad
     else:
         listaRunning[0].listaPags[prioridadesAct[-1]][1] = 0
         listaRunning[0].listaPags[prioridadesAct[-1]][3] = tiempoActual
-        listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
-        listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
-        listaRunning[0].listaPags[prioridadesOff[0]][5] = 1
+        listaRunning[0].listaPags[nPag][1] = 1
+        #listaRunning[0].listaPags[prioridadesOff[0]][2] = tiempoActual
+        listaRunning[0].listaPags[nPag][5] = 1
     
     agregarBlocked()
 
@@ -798,6 +806,12 @@ class Proceso:
         print("CPU restante:",self.cpuRestante)
         print("Envejecimiento:", self.Envejecimiento)
 
+    def printPaginas(self):
+        print('Paginas:')
+        nPag = 0
+        for pag in self.listaPags:
+            print(f'Pagina {nPag}:', pag)
+            nPag+=1
 
 # Metodo para leer datos de archivo
 def lecturaArchivo(nombreArchivo):
@@ -914,145 +928,156 @@ def ShowChoiceP(): #obtener la página a ejecutar
   global listaFinished
   global tkvar
   opcion=int(valor.get())
-  métodoPaginacion=tkvar.get()
+  metodoPaginacion=tkvar.get()
   print(len(listaRunning[0].listaPags))
-  if opcion<len(listaRunning[0].listaPags):
-    if (opcion==1 and listaRunning[0].listaPags[0][1]==1):
-        print("pag 0")
+  try:
+    if opcion<=len(listaRunning[0].listaPags):
+      if (opcion==1 and listaRunning[0].listaPags[0][1]==1):
+          print("pag 0")
+          listaRunning[0].listaPags[0][3] = tiempoActual
+          execTime()
+      elif(opcion==1 and listaRunning[0].listaPags[0][1]==0):
+        print("pag 0 no cargada")
+        if tkvar.get()=='FIFO':
+            print("FIFOM")
+            pagFIFO(0)
+        if tkvar.get()=='LRU':
+            print("LRUM")
+            pagLRU(0)
+        if tkvar.get()=='LFU':
+            print("LFUM")
+            pagLFU(0)
+        if tkvar.get()=='NUR':
+            print("NUR")
+            pagNUR(0)
+      elif (opcion==2 and listaRunning[0].listaPags[1][1]==1):
+        print("pag 1")
+        listaRunning[0].listaPags[1][3] = tiempoActual
         execTime()
-    elif(opcion==1 and listaRunning[0].listaPags[0][1]==0):
-      print("pag 0 no cargada")
-      if tkvar.get()=='FIFO':
-          print("FIFOM")
-          pagFIFO()
-      if tkvar.get()=='LRU':
-          print("LRUM")
-          pagLRU()
-      if tkvar.get()=='LFU':
-          print("LFUM")
-          pagLFU()
-      if tkvar.get()=='NUR':
-          print("NURM")
-          pagNUR()
-    elif (opcion==2 and listaRunning[0].listaPags[1][1]==1):
-      print("pag 1")
-      execTime()
-    elif (opcion==2 and listaRunning[0].listaPags[1][1]==0):
-      print("pag 1 no cargada")
-      if tkvar.get()=='FIFO':
-          print("FIFOM")
-          pagFIFO()
-      if tkvar.get()=='LRU':
-          print("LRUM")
-          pagLRU()
-      if tkvar.get()=='LFU':
-          print("LFUM")
-          pagLFU()
-      if tkvar.get()=='NUR':
-          print("NURM")
-          pagNUR()
-    elif (opcion==3 and listaRunning[0].listaPags[2][1]==1):
-      print("pag 2")
-      execTime()
-    elif (opcion==3 and listaRunning[0].listaPags[2][1]==0):
-      print("pag 2 no cargada")
-      if tkvar.get()=='FIFO':
-          print("FIFOM")
-          pagFIFO()
-      if tkvar.get()=='LRU':
-          print("LRUM")
-          pagLRU()
-      if tkvar.get()=='LFU':
-          print("LFUM")
-          pagLFU()
-      if tkvar.get()=='NUR':
-          print("NURM")
-          pagNUR()
-    elif (opcion==4 and listaRunning[0].listaPags[3][1]==1):
-      print("pag 3")
-      execTime()
-    elif (opcion==4 and listaRunning[0].listaPags[3][1]==0):
-      print("pag 3 no cargada")
-      if tkvar.get()=='FIFO':
-          print("FIFOM")
-          pagFIFO()
-      if tkvar.get()=='LRU':
-          print("LRUM")
-          pagLRU()
-      if tkvar.get()=='LFU':
-          print("LFUM")
-          pagLFU()
-      if tkvar.get()=='NUR':
-          print("NURM")
-          pagNUR()
-    elif (opcion==5 and listaRunning[0].listaPags[4][1]==1):
-      print("pag 4")
-      execTime()
-    elif (opcion==5 and listaRunning[0].listaPags[4][1]==0):
-      print("pag 4 no cargada")
-      if tkvar.get()=='FIFO':
-          print("FIFOM")
-          pagFIFO()
-      if tkvar.get()=='LRU':
-          print("LRUM")
-          pagLRU()
-      if tkvar.get()=='LFU':
-          print("LFUM")
-          pagLFU()
-      if tkvar.get()=='NUR':
-          print("NURM")
-          pagNUR()
-    elif (opcion==6 and listaRunning[0].listaPags[5][1]==1):
-      print("pag 5")
-      execTime()
-    elif (opcion==6 and listaRunning[0].listaPags[5][1]==0):
-      print("pag 5 no cargada")
-      if tkvar.get()=='FIFO':
-          print("FIFOM")
-          pagFIFO()
-      if tkvar.get()=='LRU':
-          print("LRUM")
-          pagLRU()
-      if tkvar.get()=='LFU':
-          print("LFUM")
-          pagLFU()
-      if tkvar.get()=='NUR':
-          print("NURM")
-          pagNUR()
-    elif (opcion==7 and listaRunning[0].listaPags[6][1]==1):
-      print("pag 6")
-      execTime()
-    elif (opcion==7 and listaRunning[0].listaPags[6][1]==0):
-      print("pag 6 no cargada")
-      if tkvar.get()=='FIFO':
-          print("FIFOM")
-          pagFIFO()
-      if tkvar.get()=='LRU':
-          print("LRUM")
-          pagLRU()
-      if tkvar.get()=='LFU':
-          print("LFUM")
-          pagLFU()
-      if tkvar.get()=='NUR':
-          print("NURM")
-          pagNUR()
-    elif (opcion==8 and listaRunning[0].listaPags[7][1]==1):
-      print("pag 7")
-      execTime()
-    elif (opcion==8 and listaRunning[0].listaPags[7][1]==0):
-      print("pag 7 no cargada")
-      if tkvar.get()=='FIFO':
-          print("FIFOM")
-          pagFIFO()
-      if tkvar.get()=='LRU':
-          print("LRUM")
-          pagLRU()
-      if tkvar.get()=='LFU':
-          print("LFUM")
-          pagLFU()
-      if tkvar.get()=='NUR':
-          print("NURM")
-          pagNUR()
+      elif (opcion==2 and listaRunning[0].listaPags[1][1]==0):
+        print("pag 1 no cargada")
+        if tkvar.get()=='FIFO':
+            print("FIFOM")
+            pagFIFO(1)
+        if tkvar.get()=='LRU':
+            print("LRUM")
+            pagLRU(1)
+        if tkvar.get()=='LFU':
+            print("LFUM")
+            pagLFU(1)
+        if tkvar.get()=='NUR':
+            print("NURM")
+            pagNUR(1)
+      elif (opcion==3 and listaRunning[0].listaPags[2][1]==1):
+        print("pag 2")
+        listaRunning[0].listaPags[2][3] = tiempoActual
+        execTime()
+      elif (opcion==3 and listaRunning[0].listaPags[2][1]==0):
+        print("pag 2 no cargada")
+        if tkvar.get()=='FIFO':
+            print("FIFOM")
+            pagFIFO(2)
+        if tkvar.get()=='LRU':
+            print("LRUM")
+            pagLRU(2)
+        if tkvar.get()=='LFU':
+            print("LFUM")
+            pagLFU(2)
+        if tkvar.get()=='NUR':
+            print("NURM")
+            pagNUR(2)
+      elif (opcion==4 and listaRunning[0].listaPags[3][1]==1):
+        print("pag 3")
+        listaRunning[0].listaPags[3][3] = tiempoActual
+        execTime()
+      elif (opcion==4 and listaRunning[0].listaPags[3][1]==0):
+        print("pag 3 no cargada")
+        if tkvar.get()=='FIFO':
+            print("FIFOM")
+            pagFIFO(3)
+        if tkvar.get()=='LRU':
+            print("LRUM")
+            pagLRU(3)
+        if tkvar.get()=='LFU':
+            print("LFUM")
+            pagLFU(3)
+        if tkvar.get()=='NUR':
+            print("NURM")
+            pagNUR(3)
+      elif (opcion==5 and listaRunning[0].listaPags[4][1]==1):
+        print("pag 4")
+        listaRunning[0].listaPags[4][3] = tiempoActual
+        execTime()
+      elif (opcion==5 and listaRunning[0].listaPags[4][1]==0):
+        print("pag 4 no cargada")
+        if tkvar.get()=='FIFO':
+            print("FIFOM")
+            pagFIFO(4)
+        if tkvar.get()=='LRU':
+            print("LRUM")
+            pagLRU(4)
+        if tkvar.get()=='LFU':
+            print("LFUM")
+            pagLFU(4)
+        if tkvar.get()=='NUR':
+            print("NURM")
+            pagNUR(4)
+      elif (opcion==6 and listaRunning[0].listaPags[5][1]==1):
+        print("pag 5")
+        listaRunning[0].listaPags[5][3] = tiempoActual
+        execTime()
+      elif (opcion==6 and listaRunning[0].listaPags[5][1]==0):
+        print("pag 5 no cargada")
+        if tkvar.get()=='FIFO':
+            print("FIFOM")
+            pagFIFO(5)
+        if tkvar.get()=='LRU':
+            print("LRUM")
+            pagLRU(5)
+        if tkvar.get()=='LFU':
+            print("LFUM")
+            pagLFU(5)
+        if tkvar.get()=='NUR':
+            print("NURM")
+            pagNUR(5)
+      elif (opcion==7 and listaRunning[0].listaPags[6][1]==1):
+        print("pag 6")
+        listaRunning[0].listaPags[6][3] = tiempoActual
+        execTime()
+      elif (opcion==7 and listaRunning[0].listaPags[6][1]==0):
+        print("pag 6 no cargada")
+        if tkvar.get()=='FIFO':
+            print("FIFOM")
+            pagFIFO(6)
+        if tkvar.get()=='LRU':
+            print("LRUM")
+            pagLRU(6)
+        if tkvar.get()=='LFU':
+            print("LFUM")
+            pagLFU(6)
+        if tkvar.get()=='NUR':
+            print("NURM")
+            pagNUR(6)
+      elif (opcion==8 and listaRunning[0].listaPags[7][1]==1):
+        print("pag 7")
+        listaRunning[0].listaPags[7][3] = tiempoActual
+        execTime()
+      elif (opcion==8 and listaRunning[0].listaPags[7][1]==0):
+        print("pag 7 no cargada")
+        if tkvar.get()=='FIFO':
+            print("FIFOM")
+            pagFIFO(7)
+        if tkvar.get()=='LRU':
+            print("LRUM")
+            pagLRU(7)
+        if tkvar.get()=='LFU':
+            print("LFUM")
+            pagLFU(7)
+        if tkvar.get()=='NUR':
+            print("NURM")
+            pagNUR(7)
+  except IndexError:
+    pass
 
 valor=tk.IntVar()
 valor.set(None)
