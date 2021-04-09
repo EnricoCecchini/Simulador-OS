@@ -195,7 +195,7 @@ def ShowChoice():
       agregarReady()
     elif opcion==6:
       print("Dispositivo de i/o")
-      agregarBlocked()
+      agregarRunningReady()
       agregarReady()
     
     for process in listaRunning: # agrega 1 a cpu asignado
@@ -607,21 +607,13 @@ def pagFIFO(nPag):
     global listaRunning
     global tiempoActual
 
-    tiempoTempNuevo = listaRunning[0].listaPags[0][2]
-    tiempoTempViejo = listaRunning[0].listaPags[0][2]
-    indexNuevo = 0
-    indexViejo = 0
     pagsAct = 0
+    indices = []
 
     # Se iteran las paginas para encontrar la primera en llegar no activada y la mas vieja activada
-    for i in range(len(listaRunning[0].listaPags)):
-        if tiempoTempNuevo > listaRunning[0].listaPags[i][2] and listaRunning[0].listaPags[i][1] == 0:
-            indexNuevo = i
-            tiempoTempNuevo = listaRunning[0].listaPags[i][2]
-        
-        if tiempoTempViejo < listaRunning[0].listaPags[i][2] and listaRunning[0].listaPags[i][1] == 1:
-            indexViejo = i
-            tiempoTempViejo = listaRunning[0].listaPags[i][2]
+    for i in range(len(listaRunning[0].listaPags)):        
+        if listaRunning[0].listaPags[i][1] == 1:
+            indices.append(i)
 
         if listaRunning[0].listaPags[i][1] == 1:
             pagsAct += 1
@@ -634,8 +626,8 @@ def pagFIFO(nPag):
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
-        listaRunning[0].listaPags[indexViejo][1] = 0
-        listaRunning[0].listaPags[indexViejo][3] = tiempoActual
+        listaRunning[0].listaPags[indices[0]][1] = 0
+        listaRunning[0].listaPags[indices[0]][3] = tiempoActual
         listaRunning[0].listaPags[nPag][1] = 1
         #listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
         listaRunning[0].listaPags[nPag][5] = 1
@@ -649,24 +641,17 @@ def pagLRU(nPag):
     global listaRunning
     global tiempoActual
 
-    accesoTempNuevo = listaRunning[0].listaPags[0][3]
-    accesoTempViejo = listaRunning[0].listaPags[0][3]
-    indexNuevo = 0
-    indexViejo = 0
     pagsAct = 0
+    index = 0
+
+    temp = listaRunning[0].listaPags[0][3]
 
     # Se iteran las paginas para encontrar la pagina con mas tiempo sin accesar y la mas recientemente accesada
     for i in range(len(listaRunning[0].listaPags)):
-        if accesoTempNuevo > listaRunning[0].listaPags[i][3] and listaRunning[0].listaPags[i][1] == 0:
-            indexNuevo = i
-            accesoTempNuevo = listaRunning[0].listaPags[i][3]
-        
-        if accesoTempViejo < listaRunning[0].listaPags[i][3] and listaRunning[0].listaPags[i][1] == 1:
-            indexViejo = i
-            accesoTempViejo = listaRunning[0].listaPags[i][3]
-
         if listaRunning[0].listaPags[i][1] == 1:
-            pagsAct += 1
+          if temp < listaRunning[0].listaPags[i][3]:
+            index = i
+          pagsAct += 1
     
     # Si aun hay espacio para paginas nuevas, se carga la pagina nueva
     if pagsAct < limitePags:
@@ -676,8 +661,8 @@ def pagLRU(nPag):
 
     # Si no, se apaga la pagina vieja y activa la nueva
     else:
-        listaRunning[0].listaPags[indexViejo][1] = 0
-        listaRunning[0].listaPags[indexViejo][3] = tiempoActual
+        listaRunning[0].listaPags[index][1] = 0
+        #listaRunning[0].listaPags[index][3] = tiempoActual
         listaRunning[0].listaPags[nPag][1] = 1
         #listaRunning[0].listaPags[indexNuevo][2] = tiempoActual
         listaRunning[0].listaPags[nPag][5] = 1
@@ -698,10 +683,6 @@ def pagLFU(nPag):
 
     # Se iteran las paginas para encontrar la pagina con mas tiempo sin accesar y la mas recientemente accesada
     for i in range(len(listaRunning[0].listaPags)):
-        if nAccesosTempNuevo > listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 0:
-            indexNuevo = i
-            nAccesosTempNuevo = listaRunning[0].listaPags[i][4]
-        
         if nAccesosTempViejo < listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 1:
             indexViejo = i
             nAccesosTempViejo = listaRunning[0].listaPags[i][4]
@@ -742,21 +723,21 @@ def pagNUR(nPag):
 
     pagAct = 0
     for i in range(len(listaRunning[0].listaPags)):
-        if listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
+        if listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
             prioridadOff0.append(i)
-        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
-            prioridadOff1.append(i)
         elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 1:
+            prioridadOff1.append(i)
+        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
             prioridadOff2.append(i)
-        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
+        elif listaRunning[0].listaPags[i][1] == 0 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
             prioridadOff3.append(i)
-        if listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
-            prioridadAct0.append(i)
-        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
+        if listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
             prioridadAct0.append(i)
         elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 1:
+            prioridadAct0.append(i)
+        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 0:
             prioridadAct2.append(i)
-        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 1 and listaRunning[0].listaPags[i][6] == 1:
+        elif listaRunning[0].listaPags[i][1] == 1 and listaRunning[0].listaPags[i][5] == 0 and listaRunning[0].listaPags[i][6] == 0:
             prioridadAct3.append(i)
         
         if listaRunning[0].listaPags[i][1] == 1:
@@ -937,6 +918,9 @@ def ShowChoiceP(): #obtener la página a ejecutar
       if (opcion==1 and listaRunning[0].listaPags[0][1]==1):
           print("pag 0")
           listaRunning[0].listaPags[0][3] = tiempoActual
+          listaRunning[0].listaPags[0][4] +=1
+          if listaRunning[0].listaPags[0][4] % 5 == 0:
+            listaRunning[0].listaPags[0][6] = 1
           execTime()
       elif(opcion==1 and listaRunning[0].listaPags[0][1]==0):
         print("pag 0 no cargada")
@@ -955,6 +939,9 @@ def ShowChoiceP(): #obtener la página a ejecutar
       elif (opcion==2 and listaRunning[0].listaPags[1][1]==1):
         print("pag 1")
         listaRunning[0].listaPags[1][3] = tiempoActual
+        listaRunning[0].listaPags[1][4] +=1
+        if listaRunning[0].listaPags[1][4] % 5 == 0:
+          listaRunning[0].listaPags[1][6] = 1
         execTime()
       elif (opcion==2 and listaRunning[0].listaPags[1][1]==0):
         print("pag 1 no cargada")
@@ -973,6 +960,9 @@ def ShowChoiceP(): #obtener la página a ejecutar
       elif (opcion==3 and listaRunning[0].listaPags[2][1]==1):
         print("pag 2")
         listaRunning[0].listaPags[2][3] = tiempoActual
+        listaRunning[0].listaPags[2][4] +=1
+        if listaRunning[0].listaPags[2][4] % 5 == 0:
+          listaRunning[0].listaPags[2][6] = 1
         execTime()
       elif (opcion==3 and listaRunning[0].listaPags[2][1]==0):
         print("pag 2 no cargada")
@@ -991,6 +981,9 @@ def ShowChoiceP(): #obtener la página a ejecutar
       elif (opcion==4 and listaRunning[0].listaPags[3][1]==1):
         print("pag 3")
         listaRunning[0].listaPags[3][3] = tiempoActual
+        listaRunning[0].listaPags[3][4] +=1
+        if listaRunning[0].listaPags[3][4] % 5 == 0:
+          listaRunning[0].listaPags[3][6] = 1
         execTime()
       elif (opcion==4 and listaRunning[0].listaPags[3][1]==0):
         print("pag 3 no cargada")
@@ -1009,6 +1002,9 @@ def ShowChoiceP(): #obtener la página a ejecutar
       elif (opcion==5 and listaRunning[0].listaPags[4][1]==1):
         print("pag 4")
         listaRunning[0].listaPags[4][3] = tiempoActual
+        listaRunning[0].listaPags[4][4] +=1
+        if listaRunning[0].listaPags[4][4] % 5 == 0:
+          listaRunning[0].listaPags[4][6] = 1
         execTime()
       elif (opcion==5 and listaRunning[0].listaPags[4][1]==0):
         print("pag 4 no cargada")
@@ -1027,6 +1023,9 @@ def ShowChoiceP(): #obtener la página a ejecutar
       elif (opcion==6 and listaRunning[0].listaPags[5][1]==1):
         print("pag 5")
         listaRunning[0].listaPags[5][3] = tiempoActual
+        listaRunning[0].listaPags[5][4] +=1
+        if listaRunning[0].listaPags[5][4] % 5 == 0:
+          listaRunning[0].listaPags[5][6] = 1
         execTime()
       elif (opcion==6 and listaRunning[0].listaPags[5][1]==0):
         print("pag 5 no cargada")
@@ -1045,6 +1044,9 @@ def ShowChoiceP(): #obtener la página a ejecutar
       elif (opcion==7 and listaRunning[0].listaPags[6][1]==1):
         print("pag 6")
         listaRunning[0].listaPags[6][3] = tiempoActual
+        listaRunning[0].listaPags[6][4] +=1
+        if listaRunning[0].listaPags[6][4] % 5 == 0:
+          listaRunning[0].listaPags[6][6] = 1
         execTime()
       elif (opcion==7 and listaRunning[0].listaPags[6][1]==0):
         print("pag 6 no cargada")
@@ -1063,6 +1065,9 @@ def ShowChoiceP(): #obtener la página a ejecutar
       elif (opcion==8 and listaRunning[0].listaPags[7][1]==1):
         print("pag 7")
         listaRunning[0].listaPags[7][3] = tiempoActual
+        listaRunning[0].listaPags[7][4] +=1
+        if listaRunning[0].listaPags[7][4] % 5 == 0:
+          listaRunning[0].listaPags[7][6] = 1
         execTime()
       elif (opcion==8 and listaRunning[0].listaPags[7][1]==0):
         print("pag 7 no cargada")
