@@ -215,7 +215,7 @@ def pagNUR():
     prioridadesOff = prioridadOff0 + prioridadOff1 + prioridadOff2 + prioridadOff3
     prioridadesAct = prioridadAct0 + prioridadAct1 + prioridadAct2 + prioridadAct3
 
-    print(prioridadesOff)
+    #print(prioridadesOff)
 
     if pagAct < limitePags:
         listaRunning[0].listaPags[prioridadesOff[0]][1] = 1
