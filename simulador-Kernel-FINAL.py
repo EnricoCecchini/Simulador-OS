@@ -683,10 +683,6 @@ def pagLFU(nPag):
 
     # Se iteran las paginas para encontrar la pagina con mas tiempo sin accesar y la mas recientemente accesada
     for i in range(len(listaRunning[0].listaPags)):
-        if nAccesosTempNuevo > listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 0:
-            indexNuevo = i
-            nAccesosTempNuevo = listaRunning[0].listaPags[i][4]
-        
         if nAccesosTempViejo < listaRunning[0].listaPags[i][4] and listaRunning[0].listaPags[i][1] == 1:
             indexViejo = i
             nAccesosTempViejo = listaRunning[0].listaPags[i][4]
